@@ -1,5 +1,5 @@
 ﻿// Something that is on the screen currently moving.
-TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRange) {
+TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRange, inImpactRange, inSource) {
     var that = this,
         _render = TG.Engines.Animation.Demo(),
         _startPos = new TG.Objects.Position(inPosition.x, inPosition.y),
@@ -42,6 +42,14 @@ TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRang
         }
 
         if (!_delete) {
+            var hit = false;
+            TG.Engines.Game.Distance.Within(that, inImpactRange, function (target) {
+                if (!hit && target.Combat && target.Combat.ReduceHP && target !== inSource) {
+                    _delete = true;
+                    hit = true;
+                    target.Combat.ReduceHP(1000, inTitle);
+                }
+            });
             _render.Tick();
 
             // Update the position of the render.

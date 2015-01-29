@@ -1,4 +1,4 @@
-﻿TG.Objects.NPC = function (inTitle, inPosition) {
+﻿TG.Objects.NPC = function (inTitle, inPosition, inSpeed) {
     var that = this;
 
     // Gets and tests a property for data.
@@ -16,6 +16,7 @@
     var moving = {
         vertical: 0,
         horizontal: 0,
+        speed: inSpeed,
         left: false,
         right: false,
         up: false,
@@ -23,7 +24,17 @@
     };
 
     that.getDelete = function () {
-        return (_position.x < -100);
+        return (_position.x < -100 || state.Combat.HP <= 0);
+    };
+
+    that.getScore = function () {
+        var rtnScore = 0;
+
+        if (state.Combat.HP <= 0) {
+            rtnScore = 150 * moving.speed;
+        }
+
+        return rtnScore;
     };
 
     that.getMoving = function () {
@@ -135,6 +146,7 @@
 
     // what to execute on a single tick of the clock
     that.Tick = function () {
+
         state.TickCount = (state.TickCount >= 50) ? 0 : state.TickCount + 1;
 
         if (_AI) {
@@ -148,8 +160,8 @@
         _render.Tick();
 
         // Update the position of the render.
-        _position.x = _position.x + (moving.horizontal * TG.Engines.GlobalVars._STEPPIXELS * (moving.running ? 1 + TG.Engines.GlobalVars._RUNPERC : 1));
-        _position.y = _position.y + (moving.vertical * TG.Engines.GlobalVars._STEPPIXELS * (moving.running ? 1 + TG.Engines.GlobalVars._RUNPERC : 1));
+        _position.x = _position.x + (moving.horizontal * TG.Engines.GlobalVars._STEPPIXELS * (moving.speed || 1));
+        _position.y = _position.y + (moving.vertical * TG.Engines.GlobalVars._STEPPIXELS * (moving.speed || 1));
 
         return that;
     };

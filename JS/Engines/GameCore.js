@@ -8,10 +8,17 @@ TG.Engines.Game = (function (that) {
             Pos: {},
             Tick: 0,
             Count: 0
-        }
+        },
+        ticks: 0,
+        difficulty: 1,
+        projectiles: 0
     },
-    chainDistanceInTicks = 40,
-    enemiesInChain = 10;
+    chainDistanceInTicks = function () {
+        return 40 / state.difficulty;
+    },
+    enemiesInChain = 10,
+    difficultyTick = 5000,
+    totalProjectileCount = 2;
 
     $(function () {
         TG.Engines.GlobalVars._STEPTIMER = setInterval(TG.Engines.Game.Tick, 16);
@@ -27,6 +34,13 @@ TG.Engines.Game = (function (that) {
     };
 
     that.Tick = function () {
+        state.ticks++;
+
+        if (state.ticks >= difficultyTick) {
+            state.ticks = 0;
+            state.difficulty++;
+        }
+
         var deleteIds = [];
 
         for (var i = 0; i < GameObjects.length; i++) {
@@ -35,6 +49,17 @@ TG.Engines.Game = (function (that) {
                     .Tick();
 
                 if (GameObjects[i].getDelete && GameObjects[i].getDelete()) {
+                    // if an object gives a score on destruction then set the score.
+                    if (GameObjects[i].getScore) {
+                        state.score += GameObjects[i].getScore();
+                    }
+
+                    // if the object is a projectile then reduce the number of projectiles on the screen.
+                    if (GameObjects[i] instanceof TG.Objects.Projectile) {
+                        state.projectiles--;
+                    }
+
+                    // mark the id to be deleted
                     deleteIds.push(i);
                 }
             })(i);
@@ -49,7 +74,7 @@ TG.Engines.Game = (function (that) {
 
     function GenerateNewObjects() {
         if (!state.chain.chaining) {
-            state.chain.chaining = (_getRndNum(500) == 0);
+            state.chain.chaining = (_getRndNum((500 / state.difficulty)) == 0);
         } else {
             if (!state.chain.Pos.y) {
                 state.chain.Pos.y = _getRndPos().y;
@@ -57,13 +82,13 @@ TG.Engines.Game = (function (that) {
 
             if (state.chain.Tick == 0) {
                 state.chain.Count++;
-                var npc = TG.Engines.Generate.NPC(GameObjects.length, { x: 1000, y: state.chain.Pos.y });
+                var npc = TG.Engines.Generate.NPC(GameObjects.length, { x: 1000, y: state.chain.Pos.y }, state.difficulty);
                 GameObjects.push(npc);
             }
 
             state.chain.Tick++;
 
-            if (state.chain.Tick > chainDistanceInTicks) {
+            if (state.chain.Tick > chainDistanceInTicks()) {
                 state.chain.Tick = 0;
             }
             if (state.chain.Count >= enemiesInChain) {
@@ -184,11 +209,15 @@ TG.Engines.Game = (function (that) {
 
     // Attack - Space
     TG.Engines.Input.AddKey('32', function () {
-        var pos = TG.Engines.Game.Player().getPosition();
+        if(state.projectiles <= totalProjectileCount) {
+            state.projectiles++;
 
-        pos = new TG.Objects.Position(pos.x, pos.y);
+            var pos = TG.Engines.Game.Player().getPosition();
 
-        GameObjects.push(new TG.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 20, 1000));
+            pos = new TG.Objects.Position(pos.x, pos.y);
+
+            GameObjects.push(new TG.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 20, 1000, 50, that.Player()));
+        }
     }, function () {
 
     });
