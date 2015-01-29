@@ -42,6 +42,59 @@ TG.Engines.Render = (function (that) {
         document.getElementById('playArea').width = document.getElementById('playArea').width;
     }
 
+    function drawArray(renderArray, deleteOffScreen) {
+        var viewAbleItemsCount = 0;
+
+        for (var i = 0; i < renderArray.length; i++) {
+            try {
+                var r = renderArray[i].getRender();
+
+                if (r.x - PanLocation.x > 0
+                        && r.x - PanLocation.x < $('#playArea').width()
+                        && r.y - PanLocation.y > 0
+                        && r.y - PanLocation.y < $('#playArea').height()
+                    ) {
+
+                    viewAbleItemsCount++;
+                    that.Context.drawImage(r.image,
+                        r.imageX,
+                        r.imageY,
+                        r.width,
+                        r.height,
+                        r.x - PanLocation.x,
+                        r.y - PanLocation.y,
+                        r.width,
+                        r.height
+                    );
+
+                    // Write title/name
+                    if (renderArray[i].title && r.DisplayTitle) {
+                        that.WriteOutput(renderArray[i].toString(),
+                            r.x + r.width - PanLocation.x,
+                            r.y + r.height - PanLocation.y
+                        );
+                    }
+
+                    // Write current spoken words.
+                    if (renderArray[i].speak) {
+                        that.WriteOutput(renderArray[i].speak,
+                            r.x - PanLocation.x,
+                            r.y - PanLocation.y
+                        );
+                    }
+                } else {
+                    // Object is off screen.
+                    if (deleteOffScreen) {
+                        renderArray.splice(i, 1);
+                        i--;
+                    }
+                }
+            } catch (e) {
+                TG.Engines.Debug.WriteOutput(e);
+            }
+        }
+    }
+
     that.drawCanvas = function () {
         requestAnimationFrame(that.drawCanvas);
         clearCanvas();
@@ -62,49 +115,9 @@ TG.Engines.Render = (function (that) {
         
   		//TG.Engines.Debug.WriteOutput(TG.Engines.Game.CurrentHistoryLocation);
         if (TG.Engines.Game.CurrentState()) {
-  		    var viewAbleItemsCount = 0;
-  		    for (var i = 0; i < TG.Engines.Game.CurrentState().length; i++) {
-            	try {
-            	    var r = TG.Engines.Game.CurrentState()[i].getRender();
-            		
-            		if (r.x - PanLocation.x > 0
-                		    && r.x - PanLocation.x < $('#playArea').width()
-                		    && r.y - PanLocation.y > 0
-                		    && r.y - PanLocation.y < $('#playArea').height()
-            		    ) {
-            		    
-            		    viewAbleItemsCount++;
-        	           	that.Context.drawImage(r.image,
-        	           		r.imageX,
-        	           		r.imageY,
-        	           		r.width,
-        	           		r.height,
-        	           		r.x - PanLocation.x,
-        	           		r.y - PanLocation.y,
-        	           		r.width,
-        	           		r.height
-        	           	);
-        	           	
-                        // Write title/name
-        	           	if (TG.Engines.Game.CurrentState()[i].title && r.DisplayTitle) {
-        	           	    that.WriteOutput(TG.Engines.Game.CurrentState()[i].toString(),
-        	           			r.x + r.width - PanLocation.x,
-        	           			r.y + r.height - PanLocation.y
-        	           		);
-        	           	}
-        	           	
-                        // Write current spoken words.
-        	           	if (TG.Engines.Game.CurrentState()[i].speak) {
-        	           	    that.WriteOutput(TG.Engines.Game.CurrentState()[i].speak,
-        	           			r.x - PanLocation.x,
-        	           			r.y - PanLocation.y
-        	           		);
-        	           }
-        	        }
-            	}catch(e) {
-    				TG.Engines.Debug.WriteOutput(e);        		
-            	}
-            }
+
+            drawArray(TG.Engines.Game.CurrentState().BackgroundObjects, true);
+  		    drawArray(TG.Engines.Game.CurrentState().GameObjects, false);
             
   		    TG.Engines.Debug.WriteOutput('Score: ' + TG.Engines.Game.Score());
         }
@@ -210,6 +223,15 @@ TG.Engines.Animation = (function (that, a) {
 
 	    return _render;
 	}
+
+	var _Star = function (inImage, defaultAnimation) {
+	    var _render = new a.Render(inImage, 1, 1, 0, 0);
+	    var _Static = new a.Sequence();
+	    _Static.addFrame(new a.Frame(0, 0, 100));
+	    _render.addAnimation(_Static, 'static');
+
+	    return _render;
+	};
 	
 	that.Player = function (defaultAnimation) {
 		return _Character(TG.Engines.GlobalVars._PlayerImage, defaultAnimation);
@@ -237,6 +259,10 @@ TG.Engines.Animation = (function (that, a) {
 
 	that.Water = function (defaultAnimation) {
 	    return _Plant(TG.Engines.GlobalVars._WaterImage, defaultAnimation);
+	};
+
+	that.Star = function () {
+	    return _Star(TG.Engines.GlobalVars._StarImage, 'static');
 	};
 	
 	return that;

@@ -34,11 +34,18 @@ TG.Engines.Game = (function (that) {
     };
 
     that.Tick = function () {
+        var i = 0;
         state.ticks++;
 
         if (state.ticks >= difficultyTick) {
             state.ticks = 0;
             state.difficulty++;
+        }
+
+        for (i = 0; i < BackgroundObjects.length; i++) {
+            (function (i) {
+                BackgroundObjects[i].Tick();
+            })(i);
         }
 
         var deleteIds = [];
@@ -75,6 +82,22 @@ TG.Engines.Game = (function (that) {
     };
 
     function GenerateNewObjects() {
+
+        // Generate Background Objects
+        if (_getRndNum(10) == 0) {
+            var starSpeed = (_getRndNum(100) / 100) * -2;
+
+            BackgroundObjects.push(
+                new TG.Objects.Actor(
+                    'star',
+                    new TG.Objects.Position(1000, _getRndPos().y),
+                    { horizontal: starSpeed, vertical: 0 },
+                    TG.Engines.Animation.Star
+                )
+            );
+        }
+
+        // Generate Enemy Objects
         if (!state.chain.chaining) {
             state.chain.chaining = (_getRndNum((500 / state.difficulty)) == 0);
         } else {
@@ -110,7 +133,10 @@ TG.Engines.Game = (function (that) {
     }
 
     that.CurrentState = function () {
-        return GameObjects || [];
+        return {
+            GameObjects: GameObjects || [],
+            BackgroundObjects: BackgroundObjects || []
+        };
     }
 
     that.AddObject = function (o) {
@@ -174,6 +200,7 @@ TG.Engines.Game = (function (that) {
     };
 
     var GameObjects = new Array();
+    var BackgroundObjects = [];
 
     GameObjects[0] = TG.Engines.Generate.Player('Player', { x: 100, y: 100 });
 

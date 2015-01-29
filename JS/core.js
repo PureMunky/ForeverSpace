@@ -14,6 +14,7 @@ TG.Objects.Animation = {};
     scripts.push('JS/Content/constants.js');
 
     // Objects
+    scripts.push('JS/Objects/Animation/Actor.js');
     scripts.push('JS/Objects/Animation/Frame.js');
     scripts.push('JS/Objects/Animation/Render.js');
     scripts.push('JS/Objects/Animation/Sequence.js');
