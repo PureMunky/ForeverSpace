@@ -65,8 +65,10 @@ TG.Engines.Game = (function (that) {
             })(i);
         }
 
+        var deleteCount = 0;
         for (var d = 0; d < deleteIds.length; d++) {
-            GameObjects.splice(deleteIds[d], 1);
+            GameObjects.splice(deleteIds[d] - deleteCount, 1);
+            deleteCount++;
         }
 
         GenerateNewObjects();
