@@ -29,7 +29,7 @@ TG.Engines.Render = (function (that) {
     	x = x || 50;
     	y = y || 30;
         that.Context.font = "15px Times New Roman";
-        that.Context.fillStyle = "Black";
+        that.Context.fillStyle = "White";
         that.Context.fillText(inOutput, x, y);
     };
 
