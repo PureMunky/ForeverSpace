@@ -290,6 +290,7 @@ TG.Engines.Game = (function (that) {
 
     });
 
+    // Initialize the Render Engine.
     TG.Engines.Render.Init([
         new TG.Objects.Render.Layer(function () { return BackgroundObjects || []; }, true),
         new TG.Objects.Render.Layer(function () { return GameObjects || []; }, false)
