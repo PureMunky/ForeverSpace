@@ -290,5 +290,13 @@ TG.Engines.Game = (function (that) {
 
     });
 
+    TG.Engines.Render.Init([
+        new TG.Objects.Render.Layer(function () { return BackgroundObjects || []; }, true),
+        new TG.Objects.Render.Layer(function () { return GameObjects || []; }, false)
+    ], [
+        new TG.Objects.Render.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Position(50, 30)),
+        new TG.Objects.Render.Text(function () { return 'Debug: ' + TG.Engines.Debug.debugString; }, new TG.Objects.Position(50, 50)),
+    ]);
+
     return that;
 })(TG.Engines.Game || {});

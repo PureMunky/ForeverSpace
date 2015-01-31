@@ -4,6 +4,7 @@ TG.Engines = {};
 TG.Content = {};
 TG.Objects = {};
 TG.Objects.Animation = {};
+TG.Objects.Render = {};
 
 (function () {
     var i = 0,
@@ -18,6 +19,8 @@ TG.Objects.Animation = {};
     scripts.push('JS/Objects/Animation/Frame.js');
     scripts.push('JS/Objects/Animation/Render.js');
     scripts.push('JS/Objects/Animation/Sequence.js');
+    scripts.push('JS/Objects/Render/Layer.js');
+    scripts.push('JS/Objects/Render/Text.js');
     scripts.push('JS/Objects/Position.js');
     scripts.push('JS/Objects/Projectile.js');
     scripts.push('JS/Objects/Item.js');

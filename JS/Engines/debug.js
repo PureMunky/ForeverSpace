@@ -7,8 +7,6 @@ TG.Engines.Debug = (function (that) {
     	if(inOutput) {
 	    	that.debugString = inOutput;
 	    }
-	    
-        TG.Engines.Render.WriteOutput(that.debugString);
     };
     
     that.Log = function (inOutput) {

@@ -3,8 +3,15 @@ TG.Engines.Render = (function (that) {
     var PanLocation = {
         x: 0,
         y: 0
-    }
-	
+    },
+    layers = [],
+    texts = [];
+
+    that.Init = function (inLayers, inTexts) {
+        layers = inLayers;
+        texts = inTexts;
+    };
+
 	that.Context = {};
 	
 	that.MovePanLocation = function (inPosition) {
@@ -25,10 +32,11 @@ TG.Engines.Render = (function (that) {
         document.getElementById('playArea').setAttribute('height', height + 'px');
     };
 
-    that.WriteOutput = function (inOutput, x, y) {
-    	x = x || 50;
-    	y = y || 30;
-        that.Context.font = "15px Times New Roman";
+    function WriteOutput (inOutput, inPosition) {
+    	var x = inPosition ? inPosition.x : 50,
+    	    y = inPosition ? inPosition.y : 30;
+
+        that.Context.font = "15px 'courier new'";
         that.Context.fillStyle = "White";
         that.Context.fillText(inOutput, x, y);
     };
@@ -69,7 +77,7 @@ TG.Engines.Render = (function (that) {
 
                     // Write title/name
                     if (renderArray[i].title && r.DisplayTitle) {
-                        that.WriteOutput(renderArray[i].toString(),
+                        WriteOutput(renderArray[i].toString(),
                             r.x + r.width - PanLocation.x,
                             r.y + r.height - PanLocation.y
                         );
@@ -77,7 +85,7 @@ TG.Engines.Render = (function (that) {
 
                     // Write current spoken words.
                     if (renderArray[i].speak) {
-                        that.WriteOutput(renderArray[i].speak,
+                        WriteOutput(renderArray[i].speak,
                             r.x - PanLocation.x,
                             r.y - PanLocation.y
                         );
@@ -90,7 +98,7 @@ TG.Engines.Render = (function (that) {
                     }
                 }
             } catch (e) {
-                TG.Engines.Debug.WriteOutput(e);
+                WriteOutput(e, new TG.Objects.Position(50, 70));
             }
         }
     }
@@ -113,13 +121,18 @@ TG.Engines.Render = (function (that) {
             PanLocation.y++;
         }
         
-  		//TG.Engines.Debug.WriteOutput(TG.Engines.Game.CurrentHistoryLocation);
         if (TG.Engines.Game.CurrentState()) {
+            var i = 0;
 
-            drawArray(TG.Engines.Game.CurrentState().BackgroundObjects, true);
-  		    drawArray(TG.Engines.Game.CurrentState().GameObjects, false);
-            
-  		    TG.Engines.Debug.WriteOutput('Score: ' + TG.Engines.Game.Score());
+            // Draw the animation layers.
+            for (i = 0; i < layers.length; i++) {
+                drawArray(layers[i].getObjects(), layers[i].deleteOffScreen);
+            }
+
+            // Draw the text outputs.
+            for (i = 0; i < texts.length; i++) {
+                WriteOutput(texts[i].getText(), texts[i].position);
+            }
         }
 
     };
