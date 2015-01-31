@@ -5,10 +5,10 @@ TG.Engines.Input = (function (that) {
         mouse = false,
         keyboard = false;
 
-    that.Init = function (inKeyboard, inMouse, inJoystick) {
-        keyboard = inKeyboard;
-        mouse = inMouse;
-        joystick = inJoystick;
+    that.Init = function (options) {
+        keyboard = options.keyboard || false;
+        mouse = options.mouse || false;
+        joystick = options.joystick || false;
     };
 
     that.AddKey = function (keyCode, DownAction, UpAction) {

@@ -209,7 +209,9 @@ TG.Engines.Game = (function (that) {
     /*-- Register Keys --*/
     (function (i) {
         // enable keyboard but no other input method.
-        i.Init(true, false, false);
+        i.Init({
+            keyboard: true
+        });
 
         // Up - E
         i.AddKey('69', function () {
