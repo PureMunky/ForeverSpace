@@ -214,14 +214,14 @@ TG.Engines.Game = (function (that) {
         });
 
         // Up - E
-        i.AddKey('69', function () {
+        i.AddKey('Up', '69', function () {
             GameObjects[0].setMoving({ vertical: -1 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
         });
 
         // Down - D
-        i.AddKey('68', function () {
+        i.AddKey('Down', '68', function () {
             GameObjects[0].setMoving({ vertical: 1 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
@@ -242,7 +242,7 @@ TG.Engines.Game = (function (that) {
         //});
 
         // Attack - Space
-        i.AddKey('32', function () {
+        i.AddKey('Attack', '32', function () {
             if (state.projectiles <= totalProjectileCount) {
                 state.projectiles++;
 
@@ -257,39 +257,39 @@ TG.Engines.Game = (function (that) {
         });
 
         // Interact - R
-        i.AddKey('84', function () {
+        i.AddKey('Interact', '84', function () {
             TG.Engines.Game.Player().Interact.Perform();
         }, function () {
 
         });
 
         // PanRight - right
-        i.AddKey('39', function () {
+        i.AddKey('PanRight', '39', function () {
             TG.Engines.Render.MovePanLocation({ x: 20, y: 0 });
         }, function () {
 
         });
         // PanLeft - left
-        i.AddKey('37', function () {
+        i.AddKey('PanLeft', '37', function () {
             TG.Engines.Render.MovePanLocation({ x: -20, y: 0 });
         }, function () {
 
         });
         // PanDown - down
-        i.AddKey('40', function () {
+        i.AddKey('PanDown', '40', function () {
             TG.Engines.Render.MovePanLocation({ x: 0, y: 20 });
         }, function () {
 
         });
         // PanUp - up
-        i.AddKey('38', function () {
+        i.AddKey('PanUp', '38', function () {
             TG.Engines.Render.MovePanLocation({ x: 0, y: -20 });
         }, function () {
 
         });
 
         // Test - G
-        i.AddKey('71', function () {
+        i.AddKey('Test', '71', function () {
             TG.Test.Perform();
         }, function () {
 

@@ -11,7 +11,7 @@ TG.Engines.Input = (function (that) {
         joystick = options.joystick || false;
     };
 
-    that.AddKey = function (keyCode, DownAction, UpAction) {
+    that.AddKey = function (keyName, keyCode, DownAction, UpAction) {
         keys[keyCode] = keyboardButton(keyCode, DownAction, UpAction);
     };
 
