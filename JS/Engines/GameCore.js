@@ -207,97 +207,104 @@ TG.Engines.Game = (function (that) {
     //TG.Test.Setup(GameObjects);
 
     /*-- Register Keys --*/
+    (function (i) {
+        // enable keyboard but no other input method.
+        i.Init(true, false, false);
 
-    // Up - E
-    TG.Engines.Input.AddKey('69', function () {
-        GameObjects[0].setMoving({ vertical: -1 });
-    }, function () {
-        GameObjects[0].setMoving({ vertical: 0 });
-    });
+        // Up - E
+        i.AddKey('69', function () {
+            GameObjects[0].setMoving({ vertical: -1 });
+        }, function () {
+            GameObjects[0].setMoving({ vertical: 0 });
+        });
 
-    // Down - D
-    TG.Engines.Input.AddKey('68', function () {
-        GameObjects[0].setMoving({ vertical: 1 });
-    }, function () {
-        GameObjects[0].setMoving({ vertical: 0 });
-    });
+        // Down - D
+        i.AddKey('68', function () {
+            GameObjects[0].setMoving({ vertical: 1 });
+        }, function () {
+            GameObjects[0].setMoving({ vertical: 0 });
+        });
 
-    // Right - F
-    //TG.Engines.Input.AddKey('70', function () {
-    //    GameObjects[0].setMoving({ horizontal: 1 });
-    //}, function () {
-    //    GameObjects[0].setMoving({ horizontal: 0 });
-    //});
+        // Right - F
+        //TG.Engines.Input.AddKey('70', function () {
+        //    GameObjects[0].setMoving({ horizontal: 1 });
+        //}, function () {
+        //    GameObjects[0].setMoving({ horizontal: 0 });
+        //});
 
-    // Left - S
-    //TG.Engines.Input.AddKey('83', function () {
-    //    GameObjects[0].setMoving({ horizontal: -1 });
-    //}, function () {
-    //    GameObjects[0].setMoving({ horizontal: 0 });
-    //});
+        // Left - S
+        //TG.Engines.Input.AddKey('83', function () {
+        //    GameObjects[0].setMoving({ horizontal: -1 });
+        //}, function () {
+        //    GameObjects[0].setMoving({ horizontal: 0 });
+        //});
 
-    // Attack - Space
-    TG.Engines.Input.AddKey('32', function () {
-        if(state.projectiles <= totalProjectileCount) {
-            state.projectiles++;
+        // Attack - Space
+        i.AddKey('32', function () {
+            if (state.projectiles <= totalProjectileCount) {
+                state.projectiles++;
 
-            var pos = TG.Engines.Game.Player().getPosition();
+                var pos = TG.Engines.Game.Player().getPosition();
 
-            pos = new TG.Objects.Position(pos.x, pos.y);
+                pos = new TG.Objects.Position(pos.x, pos.y);
 
-            GameObjects.push(new TG.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 20, 1000, 50, that.Player()));
-        }
-    }, function () {
+                GameObjects.push(new TG.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 20, 1000, 50, that.Player()));
+            }
+        }, function () {
 
-    });
+        });
 
-    // Interact - R
-    TG.Engines.Input.AddKey('84', function () {
-        TG.Engines.Game.Player().Interact.Perform();
-    }, function () {
+        // Interact - R
+        i.AddKey('84', function () {
+            TG.Engines.Game.Player().Interact.Perform();
+        }, function () {
 
-    });
+        });
 
-    // PanRight - right
-    TG.Engines.Input.AddKey('39', function () {
-        TG.Engines.Render.MovePanLocation({ x: 20, y: 0 });
-    }, function () {
+        // PanRight - right
+        i.AddKey('39', function () {
+            TG.Engines.Render.MovePanLocation({ x: 20, y: 0 });
+        }, function () {
 
-    });
-    // PanLeft - left
-    TG.Engines.Input.AddKey('37', function () {
-        TG.Engines.Render.MovePanLocation({ x: -20, y: 0 });
-    }, function () {
+        });
+        // PanLeft - left
+        i.AddKey('37', function () {
+            TG.Engines.Render.MovePanLocation({ x: -20, y: 0 });
+        }, function () {
 
-    });
-    // PanDown - down
-    TG.Engines.Input.AddKey('40', function () {
-        TG.Engines.Render.MovePanLocation({ x: 0, y: 20 });
-    }, function () {
+        });
+        // PanDown - down
+        i.AddKey('40', function () {
+            TG.Engines.Render.MovePanLocation({ x: 0, y: 20 });
+        }, function () {
 
-    });
-    // PanUp - up
-    TG.Engines.Input.AddKey('38', function () {
-        TG.Engines.Render.MovePanLocation({ x: 0, y: -20 });
-    }, function () {
+        });
+        // PanUp - up
+        i.AddKey('38', function () {
+            TG.Engines.Render.MovePanLocation({ x: 0, y: -20 });
+        }, function () {
 
-    });
+        });
 
-    // Test - G
-    TG.Engines.Input.AddKey('71', function () {
-        TG.Test.Perform();
-    }, function () {
+        // Test - G
+        i.AddKey('71', function () {
+            TG.Test.Perform();
+        }, function () {
 
-    });
+        });
 
-    // Initialize the Render Engine.
-    TG.Engines.Render.Init([
-        new TG.Objects.Render.Layer(function () { return BackgroundObjects || []; }, true),
-        new TG.Objects.Render.Layer(function () { return GameObjects || []; }, false)
-    ], [
-        new TG.Objects.Render.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Position(50, 30)),
-        new TG.Objects.Render.Text(function () { return 'Debug: ' + TG.Engines.Debug.debugString; }, new TG.Objects.Position(50, 50)),
-    ]);
+    }(TG.Engines.Input));
+
+    (function (er, or) {
+        // Initialize the Render Engine.
+        er.Init([
+            new or.Layer(function () { return BackgroundObjects || []; }, true),
+            new or.Layer(function () { return GameObjects || []; }, false)
+        ], [
+            new or.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Position(50, 30)),
+            new or.Text(function () { return 'Debug: ' + TG.Engines.Debug.debugString; }, new TG.Objects.Position(50, 50)),
+        ]);
+    }(TG.Engines.Render, TG.Objects.Render));
 
     return that;
 })(TG.Engines.Game || {});
