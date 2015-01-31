@@ -7,6 +7,8 @@ TG.Objects.Actor = function (inTitle, inPosition, inMoving, inAnimation) {
         _moving = inMoving,
         _delete = false;
 
+    _render.setAnimation('static');
+
     that.Tick = function () {
         _render.setAnimation('static');
         _render.Tick();

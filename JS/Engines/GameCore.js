@@ -84,18 +84,20 @@ TG.Engines.Game = (function (that) {
     function GenerateNewObjects() {
 
         // Generate Background Objects
-        if (_getRndNum(10) == 0) {
-            var starSpeed = (_getRndNum(100) / 100) * -2;
-
-            BackgroundObjects.push(
-                new TG.Objects.Actor(
-                    'star',
-                    new TG.Objects.Position(1000, _getRndPos().y),
-                    { horizontal: starSpeed, vertical: 0 },
-                    TG.Engines.Animation.Star
-                )
-            );
+        if (_getRndNum(1) == 0) {
+            var starSpeed = (_getRndNum(100) / 100) * -20;
+            if(starSpeed < -1) {
+                BackgroundObjects.push(
+                    new TG.Objects.Actor(
+                        'star',
+                        new TG.Objects.Position(1000, _getRndPos().y),
+                        { horizontal: starSpeed, vertical: 0 },
+                        TG.Engines.Animation.Star
+                    )
+                );
+            }
         }
+
 
         // Generate Enemy Objects
         if (!state.chain.chaining) {
@@ -122,10 +124,6 @@ TG.Engines.Game = (function (that) {
                 state.chain.Pos = {};
             }
         }
-    }
-
-    that.Score = function () {
-        return state.score;
     }
 
     that.Player = function () {
@@ -203,8 +201,6 @@ TG.Engines.Game = (function (that) {
     var BackgroundObjects = [];
 
     GameObjects[0] = TG.Engines.Generate.Player('Player', { x: 100, y: 100 });
-
-    //TG.Test.Setup(GameObjects);
 
     /*-- Register Keys --*/
     (function (i) {
@@ -297,6 +293,7 @@ TG.Engines.Game = (function (that) {
 
     }(TG.Engines.Input));
 
+    /*-- Initialize Render Engine --*/
     (function (er, or) {
         // Initialize the Render Engine.
         er.Init([
