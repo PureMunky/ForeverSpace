@@ -156,6 +156,13 @@
         // correct the facing if the movement has changed.
         that.setFacing(moving);
 
+        TG.Engines.Game.Distance.Within(that, 50, function (target) {
+            console.log(target.title);
+            if (target.title == 'Player') {
+                target.Combat.ReduceHP(1000, inTitle);
+            }
+        });
+
         //that.incAnimationFrame(4);
         _render.Tick();
 

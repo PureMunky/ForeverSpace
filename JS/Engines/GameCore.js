@@ -39,6 +39,18 @@ TG.Engines.Game = (function (that) {
         var i = 0;
         state.ticks++;
 
+        if (that.Player().getState().Combat.HP <= 0) {
+            state.lives--;
+
+            if (state.lives <= 0) {
+                // Game Over
+                resetGame();
+            } else {
+                // Death
+                resetLevel();
+            }
+        }
+
         if (state.ticks >= difficultyTick) {
             state.ticks = 0;
             state.difficulty++;
@@ -57,7 +69,7 @@ TG.Engines.Game = (function (that) {
                 GameObjects[i]
                     .Tick();
 
-                if (GameObjects[i].getDelete && GameObjects[i].getDelete()) {
+                if (i!=0 && GameObjects[i].getDelete && GameObjects[i].getDelete()) {
                     // if an object gives a score on destruction then set the score.
                     if (GameObjects[i].getScore) {
                         state.score += GameObjects[i].getScore();
@@ -82,6 +94,29 @@ TG.Engines.Game = (function (that) {
 
         GenerateNewObjects();
     };
+
+    function resetGame() {
+        state.score = 0;
+        state.lives = 3;
+
+        resetLevel();
+    }
+
+    function resetLevel() {
+        state.chain = {
+            chaining: false,
+            Pos: {},
+            Tick: 0,
+            Count: 0
+        };
+        state.ticks = 0;
+        state.difficulty = 1;
+        state.projectiles = 0;
+
+        GameObjects = [];
+
+        GameObjects[0] = TG.Engines.Generate.Player('Player', { x: 100, y: 100 });
+    }
 
     function GenerateNewObjects() {
         var areaSize = TG.Engines.Render.getPlayAreaSize();
@@ -200,10 +235,10 @@ TG.Engines.Game = (function (that) {
         }
     };
 
-    var GameObjects = new Array();
+    var GameObjects = [];
     var BackgroundObjects = [];
 
-    GameObjects[0] = TG.Engines.Generate.Player('Player', { x: 100, y: 100 });
+    resetGame();
 
     /*-- Register Keys --*/
     (function (i) {
@@ -304,7 +339,9 @@ TG.Engines.Game = (function (that) {
             new or.Layer(function () { return GameObjects || []; }, false)
         ], [
             new or.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Position(50, 30)),
-            new or.Text(function () { return 'Debug: ' + TG.Engines.Debug.debugString; }, new TG.Objects.Position(50, 50)),
+            new or.Text(function () { return 'Lives: ' + state.lives; }, new TG.Objects.Position(50, 50)),
+            new or.Text(function () { return 'Health: ' + that.Player().getState().Combat.HP }, new TG.Objects.Position(50, 70)),
+            new or.Text(function () { return 'Debug: ' + TG.Engines.Debug.debugString; }, new TG.Objects.Position(50, 90)),
         ]);
     }(TG.Engines.Render, TG.Objects.Render));
 
