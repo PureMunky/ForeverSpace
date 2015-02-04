@@ -5,7 +5,15 @@ TG.Engines.Render = (function (that) {
         y: 0
     },
     layers = [],
-    texts = [];
+    texts = [],
+    areaSize = {
+        height: 100,
+        width: 100
+    };
+
+    that.getPlayAreaSize = function () {
+        return areaSize;
+    };
 
     that.Init = function (inLayers, inTexts) {
         layers = inLayers;
@@ -26,6 +34,9 @@ TG.Engines.Render = (function (that) {
     };
 
     that.SetPlayAreaSize = function (width, height) {
+        areaSize.height = height;
+        areaSize.width = width;
+
         $('#playArea').width(width);
         $('#playArea').height(height);
         document.getElementById('playArea').setAttribute('width', width + 'px');

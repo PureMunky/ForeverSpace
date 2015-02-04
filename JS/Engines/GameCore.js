@@ -26,7 +26,9 @@ TG.Engines.Game = (function (that) {
 
     // Returns a random position.
     function _getRndPos() {
-        return new TG.Objects.Position(Math.floor(Math.random() * 1000), Math.floor(Math.random() * 500));
+        var areaSize = TG.Engines.Render.getPlayAreaSize();
+
+        return new TG.Objects.Position(Math.floor(Math.random() * areaSize.width), Math.floor(Math.random() * areaSize.height));
     };
 
     function _getRndNum(max) {
@@ -82,6 +84,7 @@ TG.Engines.Game = (function (that) {
     };
 
     function GenerateNewObjects() {
+        var areaSize = TG.Engines.Render.getPlayAreaSize();
 
         // Generate Background Objects
         if (_getRndNum(1) == 0) {
@@ -90,7 +93,7 @@ TG.Engines.Game = (function (that) {
                 BackgroundObjects.push(
                     new TG.Objects.Actor(
                         'star',
-                        new TG.Objects.Position(1000, _getRndPos().y),
+                        new TG.Objects.Position(areaSize.width - 5, _getRndPos().y),
                         { horizontal: starSpeed, vertical: 0 },
                         TG.Engines.Animation.Star
                     )
@@ -109,7 +112,7 @@ TG.Engines.Game = (function (that) {
 
             if (state.chain.Tick == 0) {
                 state.chain.Count++;
-                var npc = TG.Engines.Generate.NPC(GameObjects.length, { x: 1000, y: state.chain.Pos.y }, state.difficulty);
+                var npc = TG.Engines.Generate.NPC(GameObjects.length, { x: areaSize.width - 5, y: state.chain.Pos.y }, state.difficulty);
                 GameObjects.push(npc);
             }
 
@@ -211,14 +214,14 @@ TG.Engines.Game = (function (that) {
 
         // Up - E
         i.AddKey('Up', '69', function () {
-            GameObjects[0].setMoving({ vertical: -1 });
+            GameObjects[0].setMoving({ vertical: -3 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
         });
 
         // Down - D
         i.AddKey('Down', '68', function () {
-            GameObjects[0].setMoving({ vertical: 1 });
+            GameObjects[0].setMoving({ vertical: 3 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
         });
