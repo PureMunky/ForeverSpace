@@ -110,7 +110,7 @@ TG.Engines.Game = (function (that) {
             Count: 0
         };
         state.ticks = 0;
-        state.difficulty = 1;
+        state.difficulty = 4;
         state.projectiles = 0;
 
         GameObjects = [];
