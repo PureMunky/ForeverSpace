@@ -169,6 +169,11 @@
         // Update the position of the render.
         _position.x = _position.x + (moving.horizontal * TG.Engines.GlobalVars._STEPPIXELS * (moving.speed || 1));
         _position.y = _position.y + (moving.vertical * TG.Engines.GlobalVars._STEPPIXELS * (moving.speed || 1));
+        
+        // Shoot every now and then.
+        if (that.title !== 'Player' && Math.floor(Math.random() * 1000) < 15) {
+            TG.Engines.Game.AddObject(new TG.Objects.Projectile('Arrow', { x: _position.x, y: _position.y }, { horizontal: -1, vertical: 0 }, 20, 1000, 50, that));
+        }
 
         return that;
     };

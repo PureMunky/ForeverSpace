@@ -1,13 +1,7 @@
 ﻿TG.Engines.Generate = (function (generate, o) {
 
-    function _Player(inName, inSex, inPosition) {
-        var newPlayer = new o.NPC(inName, inSex, inPosition);
-
-        return newPlayer;
-    }
-
-    generate.Player = function (inName, inSex, inPosition) {
-        return _Player(inName, inSex, inPosition);
+    generate.Player = function (inName, inPosition, inSpeed) {
+        return new o.NPC(inName, inPosition, inSpeed);
     };
 
     return generate;

@@ -115,7 +115,7 @@ TG.Engines.Game = (function (that) {
 
         GameObjects = [];
 
-        GameObjects[0] = TG.Engines.Generate.Player('Player', { x: 100, y: 100 });
+        GameObjects[0] = TG.Engines.Generate.Player('Player', { x: 100, y: 100 }, 4);
     }
 
     function GenerateNewObjects() {
@@ -249,14 +249,14 @@ TG.Engines.Game = (function (that) {
 
         // Up - E
         i.AddKey('Up', '69', function () {
-            GameObjects[0].setMoving({ vertical: -3 });
+            GameObjects[0].setMoving({ vertical: -1 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
         });
 
         // Down - D
         i.AddKey('Down', '68', function () {
-            GameObjects[0].setMoving({ vertical: 3 });
+            GameObjects[0].setMoving({ vertical: 1 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
         });
