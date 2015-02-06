@@ -288,6 +288,15 @@ TG.Engines.Animation = (function (that, a) {
 	that.Star = function () {
 	    return _Star(TG.Engines.GlobalVars._StarImage, 'static');
 	};
+
+	that.Bullet = function () {
+	    var _render = new a.Render(TG.Engines.GlobalVars._BulletImage, 2, 2, 0, 0);
+	    var _Static = new a.Sequence();
+	    _Static.addFrame(new a.Frame(0, 0, 100));
+	    _render.addAnimation(_Static, 'static');
+
+	    return _render;
+	}
 	
 	return that;
 })(TG.Engines.Animation || {}, TG.Objects.Animation);

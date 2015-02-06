@@ -1,13 +1,15 @@
 ﻿// Something that is on the screen currently moving.
 TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRange, inImpactRange, inSource) {
     var that = this,
-        _render = TG.Engines.Animation.Demo(),
+        _render = TG.Engines.Animation.Bullet(),
         _startPos = new TG.Objects.Position(inPosition.x, inPosition.y),
         _position = inPosition,
         _moving = inMoving,
         _speed = inSpeed,
         _range = inRange,
         _delete = false;
+
+    _render.setAnimation('static');
 
     that.getRender = function () {
         var rtnRender = _render.CurrentFrame();
@@ -31,6 +33,8 @@ TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRang
     };
 
     that.Tick = function () {
+        _render.setAnimation('static');
+
         // Delete if not moving.
         if (!_delete && _moving.horizontal == 0 && _moving.vertical == 0) {
             _delete = true;
@@ -47,7 +51,7 @@ TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRang
                 if (!hit && target.Combat && target.Combat.ReduceHP && target !== inSource) {
                     _delete = true;
                     hit = true;
-                    target.Combat.ReduceHP(1000, inTitle);
+                    target.Combat.ReduceHP(100, inTitle);
                 }
             });
             _render.Tick();

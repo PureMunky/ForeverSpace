@@ -20,6 +20,7 @@ TG.Engines.GlobalVars = (function(that) {
     that._PlantImage = 'images/scenery/plant.png';
     that._WaterImage = 'images/scenery/water.png';
     that._StarImage = 'images/scenery/star.png';
+    that._BulletImage = 'images/scenery/bullet.png';
     
     that._GamePadThreshold = .2;
     
