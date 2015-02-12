@@ -35,11 +35,11 @@
         return rtnRender;
     }
 
-    that.Tick = function () {
+    that.Tick = function (delta) {
         if (amount <= 0) _delete = true;
 
-        _render.Tick();
-        amount += .001;
+        _render.Tick(delta);
+        amount += .01 * delta;
 
         properties['water'] = true;
     }

@@ -2,7 +2,6 @@
 //GV1
 
 TG.Engines.GlobalVars = (function(that) {
-	that._STEPPIXELS = 1;
     that._STEPTIMER;
     that._PANBOUNDARYPIX = 100;
     that._RUNPERC = 1;

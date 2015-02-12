@@ -18,7 +18,8 @@ TG.Engines.Game = (function (that) {
     },
     enemiesInChain = 10,
     difficultyTick = 5000,
-    totalProjectileCount = 2;
+    totalProjectileCount = 2,
+    deltaStamp = new Date();
 
     $(function () {
         TG.Engines.GlobalVars._STEPTIMER = setInterval(TG.Engines.Game.Tick, 16);
@@ -36,7 +37,11 @@ TG.Engines.Game = (function (that) {
     };
 
     that.Tick = function () {
-        var i = 0;
+        var i = 0,
+            now = new Date(),
+            delta = (now - deltaStamp) / 1000;
+        //console.log(delta);
+        deltaStamp = now;
         state.ticks++;
 
         if (that.Player().getState().Combat.HP <= 0) {
@@ -58,7 +63,7 @@ TG.Engines.Game = (function (that) {
 
         for (i = 0; i < BackgroundObjects.length; i++) {
             (function (i) {
-                BackgroundObjects[i].Tick();
+                BackgroundObjects[i].Tick(delta);
             })(i);
         }
 
@@ -67,7 +72,7 @@ TG.Engines.Game = (function (that) {
         for (var i = 0; i < GameObjects.length; i++) {
             (function (i) {
                 GameObjects[i]
-                    .Tick();
+                    .Tick(delta);
 
                 if (i!=0 && GameObjects[i].getDelete && GameObjects[i].getDelete()) {
                     // if an object gives a score on destruction then set the score.
@@ -123,7 +128,7 @@ TG.Engines.Game = (function (that) {
 
         // Generate Background Objects
         if (_getRndNum(1) == 0) {
-            var starSpeed = (_getRndNum(100) / 100) * -20;
+            var starSpeed = (_getRndNum(500) / 100) * -150;
             if(starSpeed < -1) {
                 BackgroundObjects.push(
                     new TG.Objects.Actor(
@@ -147,7 +152,7 @@ TG.Engines.Game = (function (that) {
 
             if (state.chain.Tick == 0) {
                 state.chain.Count++;
-                var npc = TG.Engines.Generate.NPC(GameObjects.length, { x: areaSize.width - 5, y: state.chain.Pos.y }, state.difficulty);
+                var npc = TG.Engines.Generate.NPC(GameObjects.length, { x: areaSize.width - 5, y: state.chain.Pos.y }, state.difficulty * 50);
                 GameObjects.push(npc);
             }
 
@@ -249,14 +254,14 @@ TG.Engines.Game = (function (that) {
 
         // Up - E
         i.AddKey('Up', '69', function () {
-            GameObjects[0].setMoving({ vertical: -1 });
+            GameObjects[0].setMoving({ vertical: -50 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
         });
 
         // Down - D
         i.AddKey('Down', '68', function () {
-            GameObjects[0].setMoving({ vertical: 1 });
+            GameObjects[0].setMoving({ vertical: 50 });
         }, function () {
             GameObjects[0].setMoving({ vertical: 0 });
         });
@@ -284,7 +289,7 @@ TG.Engines.Game = (function (that) {
 
                 pos = new TG.Objects.Position(pos.x, pos.y);
 
-                GameObjects.push(new TG.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 20, 1000, 50, that.Player()));
+                GameObjects.push(new TG.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 1000, 1000, 50, that.Player()));
             }
         }, function () {
 

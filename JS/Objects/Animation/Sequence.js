@@ -18,11 +18,11 @@
         return rtnBool;
     }
 
-    that.Tick = function () {
+    that.Tick = function (delta) {
         var rtnBool = true;
-        currentTime++;
+        currentTime = currentTime + delta;
         if (currentTime > that.frames[currentFrame].t) {
-            currentTime = 0;
+            currentTime = currentTime - that.frames[currentFrame].t;
             rtnBool = incFrame();
         }
 

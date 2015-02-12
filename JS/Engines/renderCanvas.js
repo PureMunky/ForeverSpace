@@ -183,20 +183,20 @@ TG.Engines.Animation = (function (that, a) {
 	var _CharacterDemo = function (inImage, defaultAnimation) {
 		var _render = new a.Render(inImage, 32, 32, 0, 0);
 		var _Walk = new a.Sequence();
-		_Walk.addFrame(new a.Frame(0, null, 20));
-		_Walk.addFrame(new a.Frame(32, null, 20));
-		_Walk.addFrame(new a.Frame(64, null, 20));
-		_Walk.addFrame(new a.Frame(32, null, 20));
+		_Walk.addFrame(new a.Frame(0, null, .2));
+		_Walk.addFrame(new a.Frame(32, null, .2));
+		_Walk.addFrame(new a.Frame(64, null, .2));
+		_Walk.addFrame(new a.Frame(32, null, .2));
 		_render.addAnimation(_Walk, 'walk');
 		
 		var _Idle = new a.Sequence();
-		_Idle.addFrame(new a.Frame(32, 0, 100));
-		_Idle.addFrame(new a.Frame(32, 0, 100));
+		_Idle.addFrame(new a.Frame(32, 0, 4));
+		_Idle.addFrame(new a.Frame(32, 0, 4));
 		_render.addAnimation(_Idle, 'idle');
 		
 		var _AttackMelee = new a.Sequence(true);
-		_AttackMelee.addFrame(new a.Frame(null, 64, 10));
-		_AttackMelee.addFrame(new a.Frame(null, 80, 10));
+		_AttackMelee.addFrame(new a.Frame(null, 64, 1));
+		_AttackMelee.addFrame(new a.Frame(null, 80, 1));
 		_render.addAnimation(_AttackMelee, 'attackMelee');
 		
 		var _Dead = new a.Sequence();
@@ -230,19 +230,19 @@ TG.Engines.Animation = (function (that, a) {
 	var _Water = function (inImage, defaultAnimation) {
 	    var _render = new a.Render(inImage, 16, 16, 0, 0);
 	    var _SlowBreeze = new a.Sequence();
-	    _SlowBreeze.addFrame(new a.Frame(0, 0, 40));
-	    _SlowBreeze.addFrame(new a.Frame(0, 16, 40));
-	    _SlowBreeze.addFrame(new a.Frame(0, 32, 40));
-	    _SlowBreeze.addFrame(new a.Frame(0, 48, 40));
-	    _SlowBreeze.addFrame(new a.Frame(0, 64, 40));
+	    _SlowBreeze.addFrame(new a.Frame(0, 0, .4));
+	    _SlowBreeze.addFrame(new a.Frame(0, 16, .4));
+	    _SlowBreeze.addFrame(new a.Frame(0, 32, .4));
+	    _SlowBreeze.addFrame(new a.Frame(0, 48, .4));
+	    _SlowBreeze.addFrame(new a.Frame(0, 64, .4));
 	    _render.addAnimation(_SlowBreeze, 'slowBreeze');
 
 	    var _FastBreeze = new a.Sequence();
-	    _FastBreeze.addFrame(new a.Frame(16, 0, 10));
-	    _FastBreeze.addFrame(new a.Frame(16, 16, 10));
-	    _FastBreeze.addFrame(new a.Frame(16, 32, 10));
-	    _FastBreeze.addFrame(new a.Frame(16, 48, 10));
-	    _FastBreeze.addFrame(new a.Frame(16, 64, 10));
+	    _FastBreeze.addFrame(new a.Frame(16, 0, .1));
+	    _FastBreeze.addFrame(new a.Frame(16, 16, .1));
+	    _FastBreeze.addFrame(new a.Frame(16, 32, .1));
+	    _FastBreeze.addFrame(new a.Frame(16, 48, .1));
+	    _FastBreeze.addFrame(new a.Frame(16, 64, .1));
 	    _render.addAnimation(_FastBreeze, 'fastBreeze');
 
 	    return _render;

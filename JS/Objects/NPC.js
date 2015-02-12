@@ -145,7 +145,7 @@
     }
 
     // what to execute on a single tick of the clock
-    that.Tick = function () {
+    that.Tick = function (delta) {
 
         state.TickCount = (state.TickCount >= 50) ? 0 : state.TickCount + 1;
 
@@ -157,22 +157,21 @@
         that.setFacing(moving);
 
         TG.Engines.Game.Distance.Within(that, 50, function (target) {
-            console.log(target.title);
             if (target.title == 'Player') {
                 target.Combat.ReduceHP(1000, inTitle);
             }
         });
 
         //that.incAnimationFrame(4);
-        _render.Tick();
+        _render.Tick(delta);
 
         // Update the position of the render.
-        _position.x = _position.x + (moving.horizontal * TG.Engines.GlobalVars._STEPPIXELS * (moving.speed || 1));
-        _position.y = _position.y + (moving.vertical * TG.Engines.GlobalVars._STEPPIXELS * (moving.speed || 1));
+        _position.x = _position.x + (moving.horizontal * delta * (moving.speed || 1));
+        _position.y = _position.y + (moving.vertical * delta * (moving.speed || 1));
         
         // Shoot every now and then.
         if (that.title !== 'Player' && Math.floor(Math.random() * 1000) < 15) {
-            TG.Engines.Game.AddObject(new TG.Objects.Projectile('Arrow', { x: _position.x, y: _position.y }, { horizontal: -1, vertical: 0 }, 20, 1000, 50, that));
+            TG.Engines.Game.AddObject(new TG.Objects.Projectile('Arrow', { x: _position.x, y: _position.y }, { horizontal: -1, vertical: 0 }, 1000, 1000, 50, that));
         }
 
         return that;

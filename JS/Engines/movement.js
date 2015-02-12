@@ -10,16 +10,6 @@ TG.Engines.Action = (function (that) {
         running: false
     }
 
-    function getStepPixels() {
-        var rtnInt = TG.Engines.GlobalVars._STEPPIXELS;
-
-        if (moving.running) {
-            rtnInt *= (1 + TG.Engines.GlobalVars._RUNPERC);
-        }
-
-        return rtnInt;
-    }
-
     that.SetMoving = function (move) {
         if (move.vertical === 0) moving.vertical = 0;
         if (move.horizontal === 0) moving.horizontal = 0;
@@ -32,7 +22,7 @@ TG.Engines.Action = (function (that) {
         moving.running = run;
     };
 
-    that.Tick = function () {
+    that.Tick = function (delta) {
         var vPan, hPan, vMove, hMove;
 
         hPan = 0;
@@ -96,8 +86,8 @@ TG.Engines.Action = (function (that) {
         }
         */
 
-        TG.Engines.Render.Pan(vPan * getStepPixels(), hPan * getStepPixels());
-        TG.Engines.Render.Move(vMove * getStepPixels(), hMove * getStepPixels());
+        TG.Engines.Render.Pan(vPan * delta, hPan * delta);
+        TG.Engines.Render.Move(vMove * delta, hMove * delta);
     };
 
     return that;

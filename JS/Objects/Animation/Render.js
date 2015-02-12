@@ -30,13 +30,13 @@
         }
     }
 
-    that.Tick = function () {
-        var bool = that.CurrentAnimation().Tick();
+    that.Tick = function (delta) {
+        var bool = that.CurrentAnimation().Tick(delta);
 
         if (!bool) InterruptAnimation = null;
     }
 
-    that.CurrentAnimation = function () {
+    that.CurrentAnimation = function (delta) {
         var animation = InterruptAnimation || PrimaryAnimation;
 
         return that.Animations[animation];

@@ -9,13 +9,13 @@ TG.Objects.Actor = function (inTitle, inPosition, inMoving, inAnimation) {
 
     _render.setAnimation('static');
 
-    that.Tick = function () {
+    that.Tick = function (delta) {
         _render.setAnimation('static');
-        _render.Tick();
+        _render.Tick(delta);
 
         // Update the position of the render.
-        _position.x = _position.x + (_moving.horizontal * TG.Engines.GlobalVars._STEPPIXELS);
-        _position.y = _position.y + (_moving.vertical * TG.Engines.GlobalVars._STEPPIXELS);
+        _position.x = _position.x + (_moving.horizontal * delta);
+        _position.y = _position.y + (_moving.vertical * delta);
    };
 
     that.getRender = function () {

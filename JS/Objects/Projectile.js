@@ -32,7 +32,7 @@ TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRang
         return _delete;
     };
 
-    that.Tick = function () {
+    that.Tick = function (delta) {
         _render.setAnimation('static');
 
         // Delete if not moving.
@@ -54,11 +54,11 @@ TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRang
                     target.Combat.ReduceHP(100, inTitle);
                 }
             });
-            _render.Tick();
+            _render.Tick(delta);
 
             // Update the position of the render.
-            _position.x = _position.x + (_moving.horizontal * TG.Engines.GlobalVars._STEPPIXELS * _speed);
-            _position.y = _position.y + (_moving.vertical * TG.Engines.GlobalVars._STEPPIXELS * _speed);
+            _position.x = _position.x + (_moving.horizontal * _speed * delta);
+            _position.y = _position.y + (_moving.vertical * _speed * delta);
         }
         return that;
     };
