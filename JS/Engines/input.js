@@ -1,9 +1,11 @@
 ﻿'use strict';
 TG.Engines.Input = (function (that) {
     var keys = {},
+        keyArray = [],
         joystick = false,
         mouse = false,
-        keyboard = false;
+        keyboard = false,
+        pressed = [];
 
     that.Init = function (options) {
         keyboard = options.keyboard || false;
@@ -13,19 +15,26 @@ TG.Engines.Input = (function (that) {
 
     that.AddKey = function (keyName, keyCode, DownAction, UpAction) {
         keys[keyCode] = keyboardButton(keyCode, DownAction, UpAction);
+        keyArray.push(keyCode);
+    };
+
+    that.Tick = function () {
+        var i = 0;
+        for (i = 0; i < keyArray.length; i++) {
+            if (pressed[keyArray[i]] && keys[keyArray[i]] && keys[keyArray[i]].downAction) {
+                keys[keyArray[i]].downAction();
+            }
+        }
     };
 
     $(function () {
         $(document).keydown(function (event) {
             if (keyboard && !keyboardEntry) {
                 event.preventDefault();
-				//TODO: smooth out when pressing two opposing directions at the same time (e.x. Left and Right).
-				//TODO: add ability to click/touch where to move to (for phone/tablet).
+
 				TG.Engines.Game.Player().setAI();
 
-				if (keys[event.keyCode] && keys[event.keyCode].downAction) {
-				    keys[event.keyCode].downAction();
-				}
+				pressed[event.keyCode] = true;
             }
             
             TG.Engines.Debug.Log(event.keyCode);
@@ -33,6 +42,8 @@ TG.Engines.Input = (function (that) {
 
         $(document).keyup(function (event) {
             if (keyboard && keys[event.keyCode] && keys[event.keyCode].upAction) {
+                delete pressed[event.keyCode];
+
                 keys[event.keyCode].upAction();
             }
         });

@@ -43,6 +43,7 @@ TG.Engines.Game = (function (that) {
         //console.log(delta);
         deltaStamp = now;
         state.ticks++;
+        TG.Engines.Input.Tick();
 
         if (that.Player().getState().Combat.HP <= 0) {
             state.lives--;
