@@ -39,8 +39,10 @@ TG.Engines.Render = (function (that) {
 
         $('#playArea').width(width);
         $('#playArea').height(height);
-        document.getElementById('playArea').setAttribute('width', width + 'px');
-        document.getElementById('playArea').setAttribute('height', height + 'px');
+        if (document.getElementById('playArea')) {
+          document.getElementById('playArea').setAttribute('width', width + 'px');
+          document.getElementById('playArea').setAttribute('height', height + 'px');
+        }
     };
 
     function WriteOutput (inOutput, inPosition) {
@@ -318,6 +320,8 @@ $(function () {
         TG.Engines.Render.FillScreen();
     });
 
-    TG.Engines.Render.Context = document.getElementById('playArea').getContext('2d');
-    TG.Engines.Render.drawCanvas();
+    if (document.getElementById('playArea')) {
+        TG.Engines.Render.Context = document.getElementById('playArea').getContext('2d');
+        TG.Engines.Render.drawCanvas();
+    }
 });

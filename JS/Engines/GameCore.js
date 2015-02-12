@@ -40,7 +40,7 @@ TG.Engines.Game = (function (that) {
         var i = 0,
             now = new Date(),
             delta = (now - deltaStamp) / 1000;
-        //console.log(delta);
+
         deltaStamp = now;
         state.ticks++;
         TG.Engines.Input.Tick();
