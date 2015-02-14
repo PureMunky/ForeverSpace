@@ -148,5 +148,16 @@
     return _render;
   }
 
+  that.Generic = function (ImageSrc, height, width, posX, posY) {
+    return function () {
+      var _render = new a.Render(ImageSrc, height, width, posX, posY);
+      var _Static = new a.Sequence();
+      _Static.addFrame(new a.Frame(0, 0, 100));
+      _render.addAnimation(_Static, 'static');
+
+      return _render;
+    };
+  }
+
   return that;
 })(TG.Objects.Render, TG.Engine.GlobalVars);

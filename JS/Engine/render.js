@@ -73,12 +73,12 @@
       try {
         var r = renderArray[i].getRender();
 
-        if (r.x - PanLocation.x > 0
+        if ((r.x + r.width) - PanLocation.x > 0
                 && r.x - PanLocation.x < $('#playArea').width()
-                && r.y - PanLocation.y > 0
+                && (r.y + r.height) - PanLocation.y > 0
                 && r.y - PanLocation.y < $('#playArea').height()
             ) {
-
+          // Object is on screen
           viewAbleItemsCount++;
           that.Context.drawImage(r.image,
               r.imageX,
@@ -123,20 +123,21 @@
     requestAnimationFrame(that.drawCanvas);
     clearCanvas();
 
-    var p = FollowObject().getPosition();
+    if (FollowObject().getPosition) {
+      var p = FollowObject().getPosition();
 
-    if (p.x < PanLocation.x + g._BorderPadding) {
-      PanLocation.x--;
-    } else if (p.x > PanLocation.x + $('#playArea').width() - g._BorderPadding) {
-      PanLocation.x++;
+      if (p.x < PanLocation.x + g._BorderPadding) {
+        PanLocation.x--;
+      } else if (p.x > PanLocation.x + $('#playArea').width() - g._BorderPadding) {
+        PanLocation.x++;
+      }
+
+      if (p.y < PanLocation.y + g._BorderPadding) {
+        PanLocation.y--;
+      } else if (p.y > PanLocation.y + $('#playArea').height() - g._BorderPadding) {
+        PanLocation.y++;
+      }
     }
-
-    if (p.y < PanLocation.y + g._BorderPadding) {
-      PanLocation.y--;
-    } else if (p.y > PanLocation.y + $('#playArea').height() - g._BorderPadding) {
-      PanLocation.y++;
-    }
-
     var i = 0;
 
     // Draw the animation layers.

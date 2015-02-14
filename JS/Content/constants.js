@@ -19,7 +19,9 @@ TG.Engine.GlobalVars = (function(that) {
     that._WaterImage = 'images/scenery/water.png';
     that._StarImage = 'images/scenery/star.png';
     that._BulletImage = 'images/scenery/bullet.png';
-    
+  
+    that._TitleScreen = 'images/Title.png';
+
     that._GamePadThreshold = .2;
     
 	return that;

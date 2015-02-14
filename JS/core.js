@@ -8,7 +8,6 @@ TG.Engine = {};
 
 TG.Content = {};
 TG.Objects = {};
-TG.Objects.Animation = {};
 TG.Objects.Render = {};
 
 (function () {

@@ -1,26 +1,27 @@
-TG.Game.Core = (function (generate, render) {
+TG.Game.Core = (function (generate, render, vars) {
   'use strict';
 
   var that = {},
     state = {
-    score: 0,
-    lives: 3,
-    chain: {
-      chaining: false,
-      Pos: {},
-      Tick: 0,
-      Count: 0
+      score: 0,
+      lives: 3,
+      chain: {
+        chaining: false,
+        Pos: {},
+        Tick: 0,
+        Count: 0
+      },
+      ticks: 0,
+      difficulty: 1,
+      projectiles: 0
     },
-    ticks: 0,
-    difficulty: 1,
-    projectiles: 0
-  },
   chainDistanceInTicks = function () {
     return 40 / state.difficulty;
   },
   enemiesInChain = 10,
   difficultyTick = 5000,
-  totalProjectileCount = 2;
+  totalProjectileCount = 2,
+  running = 0;
 
   // Returns a random position.
   function _getRndPos() {
@@ -38,7 +39,7 @@ TG.Game.Core = (function (generate, render) {
 
     state.ticks++;
 
-    if (that.Player().getState().Combat.HP <= 0) {
+    if (running && that.Player().getState().Combat.HP <= 0) {
       state.lives--;
 
       if (state.lives <= 0) {
@@ -61,28 +62,36 @@ TG.Game.Core = (function (generate, render) {
       })(i);
     }
 
+    for (i = 0; i < ForegroundObjects.length; i++) {
+      (function (i) {
+        ForegroundObjects[i].Tick(delta);
+      })(i);
+    }
+
     var deleteIds = [];
 
-    for (var i = 0; i < GameObjects.length; i++) {
-      (function (i) {
-        GameObjects[i]
-            .Tick(delta);
+    if (running) {
+      for (var i = 0; i < GameObjects.length; i++) {
+        (function (i) {
+          GameObjects[i]
+              .Tick(delta);
 
-        if (i != 0 && GameObjects[i].getDelete && GameObjects[i].getDelete()) {
-          // if an object gives a score on destruction then set the score.
-          if (GameObjects[i].getScore) {
-            state.score += GameObjects[i].getScore();
+          if (i != 0 && GameObjects[i].getDelete && GameObjects[i].getDelete()) {
+            // if an object gives a score on destruction then set the score.
+            if (GameObjects[i].getScore) {
+              state.score += GameObjects[i].getScore();
+            }
+
+            // if the object is a projectile then reduce the number of projectiles on the screen.
+            if (GameObjects[i] instanceof TG.Game.Objects.Projectile) {
+              state.projectiles--;
+            }
+
+            // mark the id to be deleted
+            deleteIds.push(i);
           }
-
-          // if the object is a projectile then reduce the number of projectiles on the screen.
-          if (GameObjects[i] instanceof TG.Game.Objects.Projectile) {
-            state.projectiles--;
-          }
-
-          // mark the id to be deleted
-          deleteIds.push(i);
-        }
-      })(i);
+        })(i);
+      }
     }
 
     var deleteCount = 0;
@@ -95,13 +104,16 @@ TG.Game.Core = (function (generate, render) {
   }
 
   function resetGame() {
+    console.log('reset');
     state.score = 0;
     state.lives = 3;
-
-    resetLevel();
+    GameObjects = [];
+    PlayTitleScreen();
   }
 
   function resetLevel() {
+    ForegroundObjects = [];
+
     state.chain = {
       chaining: false,
       Pos: {},
@@ -115,6 +127,7 @@ TG.Game.Core = (function (generate, render) {
     GameObjects = [];
 
     GameObjects[0] = generate.Player('Player', { x: 100, y: 100 }, 4);
+    running = true;
   }
 
   function GenerateNewObjects() {
@@ -135,36 +148,55 @@ TG.Game.Core = (function (generate, render) {
       }
     }
 
+    if (running) {
+      // Generate Enemy Objects
+      if (!state.chain.chaining) {
+        state.chain.chaining = (_getRndNum((500 / state.difficulty)) == 0);
+      } else {
+        if (!state.chain.Pos.y) {
+          state.chain.Pos.y = _getRndPos().y;
+        }
 
-    // Generate Enemy Objects
-    if (!state.chain.chaining) {
-      state.chain.chaining = (_getRndNum((500 / state.difficulty)) == 0);
-    } else {
-      if (!state.chain.Pos.y) {
-        state.chain.Pos.y = _getRndPos().y;
-      }
+        if (state.chain.Tick == 0) {
+          state.chain.Count++;
+          var npc = generate.NPC(GameObjects.length, { x: areaSize.width - 5, y: state.chain.Pos.y }, state.difficulty * 50);
+          GameObjects.push(npc);
+        }
 
-      if (state.chain.Tick == 0) {
-        state.chain.Count++;
-        var npc = generate.NPC(GameObjects.length, { x: areaSize.width - 5, y: state.chain.Pos.y }, state.difficulty * 50);
-        GameObjects.push(npc);
-      }
+        state.chain.Tick++;
 
-      state.chain.Tick++;
-
-      if (state.chain.Tick > chainDistanceInTicks()) {
-        state.chain.Tick = 0;
+        if (state.chain.Tick > chainDistanceInTicks()) {
+          state.chain.Tick = 0;
+        }
+        if (state.chain.Count >= enemiesInChain) {
+          state.chain.Count = 0;
+          state.chain.chaining = false;
+          state.chain.Pos = {};
+        }
       }
-      if (state.chain.Count >= enemiesInChain) {
-        state.chain.Count = 0;
-        state.chain.chaining = false;
-        state.chain.Pos = {};
-      }
+    } else if(ForegroundObjects.length <= 0) {
+      PlayTitleScreen();
     }
   }
 
+  function PlayTitleScreen() {
+    running = false;
+
+    ForegroundObjects = [];
+
+    ForegroundObjects.push(
+            new TG.Objects.Render.Actor(
+                'title',
+                new TG.Objects.Render.Position(render.getPlayAreaSize().width - 5, 200),
+                { horizontal: -100, vertical: 0 },
+                TG.Game.Animations.Generic(vars._TitleScreen, 598, 223, 0, 0)
+            )
+        );
+  }
+
+
   that.Player = function () {
-    return GameObjects[0];
+    return GameObjects[0] || {};
   }
 
   that.AddObject = function (o) {
@@ -173,6 +205,7 @@ TG.Game.Core = (function (generate, render) {
 
   var GameObjects = [];
   var BackgroundObjects = [];
+  var ForegroundObjects = [];
 
   resetGame();
 
@@ -183,23 +216,31 @@ TG.Game.Core = (function (generate, render) {
       keyboard: true
     });
 
+    i.AddKey('Enter', '13', function () {
+      if (!running) {
+        resetLevel();
+      }
+    }, function () {
+
+    });
+
     // Up - E
     i.AddKey('Up', '69', function () {
-      GameObjects[0].setMoving({ vertical: -50 });
+      if (running) { GameObjects[0].setMoving({ vertical: -50 }); }
     }, function () {
-      GameObjects[0].setMoving({ vertical: 0 });
+      if (running) { GameObjects[0].setMoving({ vertical: 0 }); }
     });
 
     // Down - D
     i.AddKey('Down', '68', function () {
-      GameObjects[0].setMoving({ vertical: 50 });
+      if (running) { GameObjects[0].setMoving({ vertical: 50 }); }
     }, function () {
-      GameObjects[0].setMoving({ vertical: 0 });
+      if (running) { GameObjects[0].setMoving({ vertical: 0 }); }
     });
 
     // Attack - Space
     i.AddKey('Attack', '32', function () {
-      if (state.projectiles <= totalProjectileCount) {
+      if (running && state.projectiles <= totalProjectileCount) {
         state.projectiles++;
 
         var pos = that.Player().getPosition();
@@ -208,13 +249,6 @@ TG.Game.Core = (function (generate, render) {
 
         GameObjects.push(new TG.Game.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 1000, 1000, 50, that.Player()));
       }
-    }, function () {
-
-    });
-
-    // Interact - R
-    i.AddKey('Interact', '84', function () {
-      that.Player().Interact.Perform();
     }, function () {
 
     });
@@ -258,11 +292,12 @@ TG.Game.Core = (function (generate, render) {
     // Initialize the Render Engine.
     er.Init([
         new or.Layer(function () { return BackgroundObjects || []; }, true),
-        new or.Layer(function () { return GameObjects || []; }, false)
+        new or.Layer(function () { return GameObjects || []; }, false),
+        new or.Layer(function () { return ForegroundObjects || []; }, true)
     ], [
         new or.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Render.Position(50, 30)),
         new or.Text(function () { return 'Lives: ' + state.lives; }, new TG.Objects.Render.Position(50, 50)),
-        new or.Text(function () { return 'Health: ' + that.Player().getState().Combat.HP }, new TG.Objects.Render.Position(50, 70)),
+        new or.Text(function () { return 'Health: ' + (that.Player().getState ? that.Player().getState().Combat.HP : 0) }, new TG.Objects.Render.Position(50, 70)),
         new or.Text(function () { return 'Debug: ' + TG.Engine.Debug.debugString; }, new TG.Objects.Render.Position(50, 90)),
     ],
     that.Player);
@@ -290,4 +325,4 @@ TG.Game.Core = (function (generate, render) {
   }(TG.Engine.Core));
 
   return that;
-})(TG.Game.Generate, TG.Engine.Render);
+})(TG.Game.Generate, TG.Engine.Render, TG.Engine.GlobalVars);
