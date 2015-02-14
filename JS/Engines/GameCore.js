@@ -165,13 +165,6 @@ TG.Game = (function (that) {
     return GameObjects[0];
   }
 
-  that.CurrentState = function () {
-    return {
-      GameObjects: GameObjects || [],
-      BackgroundObjects: BackgroundObjects || []
-    };
-  }
-
   that.AddObject = function (o) {
     GameObjects.push(o);
   }
