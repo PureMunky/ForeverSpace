@@ -1,4 +1,4 @@
-﻿TG.Objects.Animation.Frame = function (inX, inY, inTime) {
+﻿TG.Objects.Render.Frame = function (inX, inY, inTime) {
     var that = this;
 
     that.x = inX;

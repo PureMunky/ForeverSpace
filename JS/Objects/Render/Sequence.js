@@ -1,4 +1,4 @@
-﻿TG.Objects.Animation.Sequence = function (interrupt) {
+﻿TG.Objects.Render.Sequence = function (interrupt) {
     var that = this;
 
     that.frames = new Array();

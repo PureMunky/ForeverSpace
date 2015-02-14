@@ -1,4 +1,4 @@
-﻿TG.Engines.Data = (function () {
+﻿TG.Engine.Data = (function () {
     'use strict';
     var that = {};
 

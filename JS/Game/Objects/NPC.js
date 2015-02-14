@@ -1,4 +1,4 @@
-﻿TG.Objects.NPC = function (inTitle, inPosition, inSpeed) {
+﻿TG.Game.Objects.NPC = function (inTitle, inPosition, inSpeed) {
     var that = this;
 
     // Gets and tests a property for data.
@@ -95,7 +95,7 @@
     }
 
     // current position
-    var _position = new TG.Objects.Position(inPosition ? inPosition.x : 0, inPosition ? inPosition.y : 0);
+    var _position = new TG.Objects.Render.Position(inPosition ? inPosition.x : 0, inPosition ? inPosition.y : 0);
 
     // gets the current position
     that.getPosition = function () {
@@ -104,7 +104,7 @@
 
     // TODO: improve how to determine what render an npc gets
     // Specify what render sheet to use for the npc.
-    var _render = (inTitle == 'Player') ? TG.Engines.Animation.Demo() : TG.Engines.Animation.NPCMale();
+    var _render = (inTitle == 'Player') ? TG.Game.Animations.Demo() : TG.Game.Animations.NPCMale();
 
     // returns the current render information.
     that.getRender = function () {
@@ -156,7 +156,7 @@
         // correct the facing if the movement has changed.
         that.setFacing(moving);
 
-        TG.Engines.Measure.Distance.Within(that, 50, function (target) {
+        TG.Engine.Measure.Distance.Within(that, 50, function (target) {
             if (target.title == 'Player') {
                 target.Combat.ReduceHP(1000, inTitle);
             }
@@ -171,7 +171,7 @@
         
         // Shoot every now and then.
         if (that.title !== 'Player' && Math.floor(Math.random() * 1000) < 15) {
-            TG.Game.AddObject(new TG.Objects.Projectile('Arrow', { x: _position.x, y: _position.y }, { horizontal: -1, vertical: 0 }, 1000, 1000, 50, that));
+            TG.Game.Core.AddObject(new TG.Game.Objects.Projectile('Arrow', { x: _position.x, y: _position.y }, { horizontal: -1, vertical: 0 }, 1000, 1000, 50, that));
         }
 
         return that;
@@ -234,7 +234,7 @@
                     acted.Combat.HitFor(that);
                     that.Inventory.PrimaryWeapon().XPUp();
                 });
-                TG.Engines.Debug.Log(that.title + ' attack with ' + w.title + ' - ' + that.Combat.Damage() + 'dmg');
+                TG.Engine.Debug.Log(that.title + ' attack with ' + w.title + ' - ' + that.Combat.Damage() + 'dmg');
             }
         },
         Damage: function () {
@@ -257,7 +257,7 @@
             } else if (amount >= state.Combat.HP) {
                 that.Interact.Say(source);
                 state.Combat.HP = 0;
-                that.setAI(TG.Engines.AI.still());
+                that.setAI(TG.Game.AI.still());
                 _render.setAnimation('dead');
             } else {
                 var enPerc = (state.Combat.Energy / state.Combat.MaxEnergy);

@@ -1,8 +1,8 @@
 ﻿// Something that is on the screen currently moving.
-TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRange, inImpactRange, inSource) {
+TG.Game.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRange, inImpactRange, inSource) {
     var that = this,
-        _render = TG.Engines.Animation.Bullet(),
-        _startPos = new TG.Objects.Position(inPosition.x, inPosition.y),
+        _render = TG.Game.Animations.Bullet(),
+        _startPos = new TG.Objects.Render.Position(inPosition.x, inPosition.y),
         _position = inPosition,
         _moving = inMoving,
         _speed = inSpeed,
@@ -41,13 +41,13 @@ TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRang
         }
 
         // Delete if past the range.
-        if (!_delete && TG.Engines.Measure.Distance.BetweenPos(_startPos, _position) >= _range) {
+        if (!_delete && TG.Engine.Measure.Distance.BetweenPos(_startPos, _position) >= _range) {
             _delete = true;
         }
 
         if (!_delete) {
             var hit = false;
-            TG.Engines.Measure.Distance.Within(that, inImpactRange, function (target) {
+            TG.Engine.Measure.Distance.Within(that, inImpactRange, function (target) {
                 if (!hit && target.Combat && target.Combat.ReduceHP && target !== inSource) {
                     _delete = true;
                     hit = true;

@@ -1,4 +1,4 @@
-﻿TG.Engines.Measure = (function () {
+﻿TG.Engine.Measure = (function () {
   var that = {},
     getGameObjects;
 

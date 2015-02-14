@@ -2,7 +2,7 @@
   var NPC;
 
   beforeEach(function () {
-    NPC = new TG.Engines.Generate.NPC('Test', { x: 0, y: 0 }, 1);
+    NPC = new TG.Game.Generate.NPC('Test', { x: 0, y: 0 }, 1);
   });
 
   describe('General', function () {

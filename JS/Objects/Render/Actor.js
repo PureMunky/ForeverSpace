@@ -1,8 +1,8 @@
 ﻿// Something that has no interactions just for visual display.
-TG.Objects.Actor = function (inTitle, inPosition, inMoving, inAnimation) {
+TG.Objects.Render.Actor = function (inTitle, inPosition, inMoving, inAnimation) {
     var that = {},
         _render = inAnimation('static'),
-        _startPos = new TG.Objects.Position(inPosition.x, inPosition.y),
+        _startPos = new TG.Objects.Render.Position(inPosition.x, inPosition.y),
         _position = inPosition,
         _moving = inMoving,
         _delete = false;

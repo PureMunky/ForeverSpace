@@ -1,4 +1,4 @@
-﻿TG.Objects.Animation.Render = function (inImage, inWidth, inHeight, inImageX, inImageY) {
+﻿TG.Objects.Render.Render = function (inImage, inWidth, inHeight, inImageX, inImageY) {
     var that = this;
 
     if (typeof inImage == 'string') {

@@ -1,9 +1,13 @@
-'use strict';
-TG.Engines.AI = (function (that) {
+TG.Game.AI = (function () {
+  'use strict';
+
+  var that = {};
+
 	var _still = function () {
 		return function (that) {
 			that.setMoving({horizontal: 0, vertical: 0});
 		}
+
 	}
 	
 	var _idle = function () {
@@ -184,22 +188,22 @@ TG.Engines.AI = (function (that) {
 			_idle()(that, state);
 			
 			if (that.Hungry()) {
-				TG.Engines.Debug.Log(that.title + ' seeks food.');
+				TG.Engine.Debug.Log(that.title + ' seeks food.');
 				state.consious = 'awake';
 				that.Interact.Say('I\'m hungry...');
 				_seek('food')(that, state);
 			} else if (that.Thirsty()) {
-				TG.Engines.Debug.Log(that.title + ' seeks water.');
+				TG.Engine.Debug.Log(that.title + ' seeks water.');
 				state.consious = 'awake';
 				that.Interact.Say('I\'m thirsty...');
 				_seek('water')(that, state);
 			} else if (that.Is.Horny()){
-				TG.Engines.Debug.Log(that.title + ' seeks sex.');
+				TG.Engine.Debug.Log(that.title + ' seeks sex.');
 				state.consious = 'awake';
 				that.Interact.Say('Brown chicken brown cow..');
 				_seek('sexA', that.getProperties('sexB'))(that, state);
 			} else if (that.Sleepy()) {
-				TG.Engines.Debug.Log(that.title + ' seeks sleep.');
+				TG.Engine.Debug.Log(that.title + ' seeks sleep.');
 				_sleep()(that, state);
 			} else {
 				if(state.consious == 'sleeping' && state.Needs.Sleep > 900) {
@@ -244,4 +248,4 @@ TG.Engines.AI = (function (that) {
 	
 
 	return that;
-})(TG.Engines.AI || {});
+}());

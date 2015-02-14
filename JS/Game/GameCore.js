@@ -1,6 +1,8 @@
-'use strict';
-TG.Game = (function (that) {
-  var state = {
+TG.Game.Core = (function (generate, render) {
+  'use strict';
+
+  var that = {},
+    state = {
     score: 0,
     lives: 3,
     chain: {
@@ -22,9 +24,9 @@ TG.Game = (function (that) {
 
   // Returns a random position.
   function _getRndPos() {
-    var areaSize = TG.Engines.Render.getPlayAreaSize();
+    var areaSize = render.getPlayAreaSize();
 
-    return new TG.Objects.Position(Math.floor(Math.random() * areaSize.width), Math.floor(Math.random() * areaSize.height));
+    return new TG.Objects.Render.Position(Math.floor(Math.random() * areaSize.width), Math.floor(Math.random() * areaSize.height));
   };
 
   function _getRndNum(max) {
@@ -73,7 +75,7 @@ TG.Game = (function (that) {
           }
 
           // if the object is a projectile then reduce the number of projectiles on the screen.
-          if (GameObjects[i] instanceof TG.Objects.Projectile) {
+          if (GameObjects[i] instanceof TG.Game.Objects.Projectile) {
             state.projectiles--;
           }
 
@@ -90,7 +92,7 @@ TG.Game = (function (that) {
     }
 
     GenerateNewObjects();
-  };
+  }
 
   function resetGame() {
     state.score = 0;
@@ -112,22 +114,22 @@ TG.Game = (function (that) {
 
     GameObjects = [];
 
-    GameObjects[0] = TG.Engines.Generate.Player('Player', { x: 100, y: 100 }, 4);
+    GameObjects[0] = generate.Player('Player', { x: 100, y: 100 }, 4);
   }
 
   function GenerateNewObjects() {
-    var areaSize = TG.Engines.Render.getPlayAreaSize();
+    var areaSize = render.getPlayAreaSize();
 
     // Generate Background Objects
     if (_getRndNum(1) == 0) {
       var starSpeed = (_getRndNum(500) / 100) * -150;
       if (starSpeed < -1) {
         BackgroundObjects.push(
-            new TG.Objects.Actor(
+            new TG.Objects.Render.Actor(
                 'star',
-                new TG.Objects.Position(areaSize.width - 5, _getRndPos().y),
+                new TG.Objects.Render.Position(areaSize.width - 5, _getRndPos().y),
                 { horizontal: starSpeed, vertical: 0 },
-                TG.Engines.Animation.Star
+                TG.Game.Animations.Star
             )
         );
       }
@@ -144,7 +146,7 @@ TG.Game = (function (that) {
 
       if (state.chain.Tick == 0) {
         state.chain.Count++;
-        var npc = TG.Engines.Generate.NPC(GameObjects.length, { x: areaSize.width - 5, y: state.chain.Pos.y }, state.difficulty * 50);
+        var npc = generate.NPC(GameObjects.length, { x: areaSize.width - 5, y: state.chain.Pos.y }, state.difficulty * 50);
         GameObjects.push(npc);
       }
 
@@ -195,20 +197,6 @@ TG.Game = (function (that) {
       GameObjects[0].setMoving({ vertical: 0 });
     });
 
-    // Right - F
-    //TG.Engines.Input.AddKey('70', function () {
-    //    GameObjects[0].setMoving({ horizontal: 1 });
-    //}, function () {
-    //    GameObjects[0].setMoving({ horizontal: 0 });
-    //});
-
-    // Left - S
-    //TG.Engines.Input.AddKey('83', function () {
-    //    GameObjects[0].setMoving({ horizontal: -1 });
-    //}, function () {
-    //    GameObjects[0].setMoving({ horizontal: 0 });
-    //});
-
     // Attack - Space
     i.AddKey('Attack', '32', function () {
       if (state.projectiles <= totalProjectileCount) {
@@ -216,9 +204,9 @@ TG.Game = (function (that) {
 
         var pos = that.Player().getPosition();
 
-        pos = new TG.Objects.Position(pos.x, pos.y);
+        pos = new TG.Objects.Render.Position(pos.x, pos.y);
 
-        GameObjects.push(new TG.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 1000, 1000, 50, that.Player()));
+        GameObjects.push(new TG.Game.Objects.Projectile('Arrow', pos, { horizontal: 1, vertical: 0 }, 1000, 1000, 50, that.Player()));
       }
     }, function () {
 
@@ -233,25 +221,25 @@ TG.Game = (function (that) {
 
     // PanRight - right
     i.AddKey('PanRight', '39', function () {
-      TG.Engines.Render.MovePanLocation({ x: 20, y: 0 });
+      render.MovePanLocation({ x: 20, y: 0 });
     }, function () {
 
     });
     // PanLeft - left
     i.AddKey('PanLeft', '37', function () {
-      TG.Engines.Render.MovePanLocation({ x: -20, y: 0 });
+      render.MovePanLocation({ x: -20, y: 0 });
     }, function () {
 
     });
     // PanDown - down
     i.AddKey('PanDown', '40', function () {
-      TG.Engines.Render.MovePanLocation({ x: 0, y: 20 });
+      render.MovePanLocation({ x: 0, y: 20 });
     }, function () {
 
     });
     // PanUp - up
     i.AddKey('PanUp', '38', function () {
-      TG.Engines.Render.MovePanLocation({ x: 0, y: -20 });
+      render.MovePanLocation({ x: 0, y: -20 });
     }, function () {
 
     });
@@ -263,7 +251,7 @@ TG.Game = (function (that) {
 
     });
 
-  }(TG.Engines.Input));
+  }(TG.Engine.Input));
 
   /*-- Initialize Render Engine --*/
   (function (er, or) {
@@ -272,20 +260,20 @@ TG.Game = (function (that) {
         new or.Layer(function () { return BackgroundObjects || []; }, true),
         new or.Layer(function () { return GameObjects || []; }, false)
     ], [
-        new or.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Position(50, 30)),
-        new or.Text(function () { return 'Lives: ' + state.lives; }, new TG.Objects.Position(50, 50)),
-        new or.Text(function () { return 'Health: ' + that.Player().getState().Combat.HP }, new TG.Objects.Position(50, 70)),
-        new or.Text(function () { return 'Debug: ' + TG.Engines.Debug.debugString; }, new TG.Objects.Position(50, 90)),
+        new or.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Render.Position(50, 30)),
+        new or.Text(function () { return 'Lives: ' + state.lives; }, new TG.Objects.Render.Position(50, 50)),
+        new or.Text(function () { return 'Health: ' + that.Player().getState().Combat.HP }, new TG.Objects.Render.Position(50, 70)),
+        new or.Text(function () { return 'Debug: ' + TG.Engine.Debug.debugString; }, new TG.Objects.Render.Position(50, 90)),
     ],
     that.Player);
-  }(TG.Engines.Render, TG.Objects.Render));
+  }(TG.Engine.Render, TG.Objects.Render));
 
   /*-- Initialize Measure --*/
   (function (m) {
     m.Init(function () {
       return GameObjects || [];
     });
-  }(TG.Engines.Measure));
+  }(TG.Engine.Measure));
 
   /*-- Main Loop --*/
   (function (core) {
@@ -294,12 +282,12 @@ TG.Game = (function (that) {
     core.Init(16);
 
     // Add input evaluation.
-    core.AddTick(TG.Engines.Input.Tick);
+    core.AddTick(TG.Engine.Input.Tick);
 
     // Add main game loop.
     core.AddTick(Tick);
 
-  }(TG.Engines.Core));
+  }(TG.Engine.Core));
 
   return that;
-})(TG.Engines.Game || {});
+})(TG.Game.Generate, TG.Engine.Render);

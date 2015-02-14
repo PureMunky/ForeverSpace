@@ -1,4 +1,4 @@
-﻿TG.Engines.Core = (function () {
+﻿TG.Engine.Core = (function () {
   'use strict';
   var that = {},
     deltaStamp = new Date(),

@@ -1,6 +1,8 @@
-﻿'use strict';
-TG.Engines.Debug = (function (that) {
-    var _log = new Array();
+﻿TG.Engine.Debug = (function () {
+  'use strict';
+
+  var that = {},
+    _log = new Array();
     
     that.debugString = '';
     that.WriteOutput = function (inOutput) {
@@ -17,4 +19,4 @@ TG.Engines.Debug = (function (that) {
 		return _log;
 	}
     return that;
-})(TG.Engines.Debug || {});
+})();
