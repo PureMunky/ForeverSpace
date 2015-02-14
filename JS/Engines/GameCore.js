@@ -1,5 +1,5 @@
 'use strict';
-TG.Engines.Game = (function (that) {
+TG.Game = (function (that) {
   var state = {
     score: 0,
     lives: 3,
@@ -176,62 +176,6 @@ TG.Engines.Game = (function (that) {
     GameObjects.push(o);
   }
 
-  that.Distance = {
-    Between: function (o1, o2) {
-      o2 = o2 || GameObjects[0];
-      var p1 = o1.getPosition();
-      var p2 = o2.getPosition();
-
-      return that.Distance.BetweenPos(p1, p2);
-    },
-    BetweenPos: function (p1, p2) {
-      var a, b;
-      a = Math.abs(p1.x - p2.x);
-      b = Math.abs(p1.y - p2.y);
-
-      return Math.sqrt((a * a) + (b * b));
-    },
-    BetweenforCompare: function (o1, o2) {
-      o2 = o2 || GameObjects[0];
-      var p1 = o1.getPosition();
-      var p2 = o2.getPosition();
-
-      var a, b;
-      a = Math.abs(p1.x - p2.x);
-      b = Math.abs(p1.y - p2.y);
-
-      return (a * a) + (b * b);
-    },
-    Closest: function (o1, propertyFilter, action, propertyEquals) {
-      var rtnObject = { title: 'none' };
-      var shortestDistance = 1000000;
-
-      for (var i = 0; i < GameObjects.length; i++) {
-        var thisDistance = that.Distance.BetweenforCompare(o1, GameObjects[i]);
-        if (o1 != GameObjects[i] && GameObjects[i].getProperties(propertyFilter, propertyEquals) && thisDistance < shortestDistance) {
-          if (action) action(GameObjects[i]);
-          shortestDistance = thisDistance;
-          rtnObject = GameObjects[i];
-        }
-      }
-
-      return rtnObject;
-    },
-    Within: function (o1, distance, action) {
-      var rtnArray = new Array();
-
-      for (var i = 0; i < GameObjects.length; i++) {
-        var thisDistance = that.Distance.Between(o1, GameObjects[i]);
-        if (thisDistance < distance && o1 != GameObjects[i]) {
-          if (action) action(GameObjects[i]);
-          rtnArray.push(GameObjects[i]);
-        }
-      }
-
-      return rtnArray;
-    }
-  };
-
   var GameObjects = [];
   var BackgroundObjects = [];
 
@@ -277,7 +221,7 @@ TG.Engines.Game = (function (that) {
       if (state.projectiles <= totalProjectileCount) {
         state.projectiles++;
 
-        var pos = TG.Engines.Game.Player().getPosition();
+        var pos = that.Player().getPosition();
 
         pos = new TG.Objects.Position(pos.x, pos.y);
 
@@ -289,7 +233,7 @@ TG.Engines.Game = (function (that) {
 
     // Interact - R
     i.AddKey('Interact', '84', function () {
-      TG.Engines.Game.Player().Interact.Perform();
+      that.Player().Interact.Perform();
     }, function () {
 
     });
@@ -339,8 +283,16 @@ TG.Engines.Game = (function (that) {
         new or.Text(function () { return 'Lives: ' + state.lives; }, new TG.Objects.Position(50, 50)),
         new or.Text(function () { return 'Health: ' + that.Player().getState().Combat.HP }, new TG.Objects.Position(50, 70)),
         new or.Text(function () { return 'Debug: ' + TG.Engines.Debug.debugString; }, new TG.Objects.Position(50, 90)),
-    ]);
+    ],
+    that.Player);
   }(TG.Engines.Render, TG.Objects.Render));
+
+  /*-- Initialize Measure --*/
+  (function (m) {
+    m.Init(function () {
+      return GameObjects || [];
+    });
+  }(TG.Engines.Measure));
 
   /*-- Main Loop --*/
   (function (core) {

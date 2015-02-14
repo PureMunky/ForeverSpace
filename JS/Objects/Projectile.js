@@ -41,13 +41,13 @@ TG.Objects.Projectile = function (inTitle, inPosition, inMoving, inSpeed, inRang
         }
 
         // Delete if past the range.
-        if (!_delete && TG.Engines.Game.Distance.BetweenPos(_startPos, _position) >= _range) {
+        if (!_delete && TG.Engines.Measure.Distance.BetweenPos(_startPos, _position) >= _range) {
             _delete = true;
         }
 
         if (!_delete) {
             var hit = false;
-            TG.Engines.Game.Distance.Within(that, inImpactRange, function (target) {
+            TG.Engines.Measure.Distance.Within(that, inImpactRange, function (target) {
                 if (!hit && target.Combat && target.Combat.ReduceHP && target !== inSource) {
                     _delete = true;
                     hit = true;

@@ -156,7 +156,7 @@
         // correct the facing if the movement has changed.
         that.setFacing(moving);
 
-        TG.Engines.Game.Distance.Within(that, 50, function (target) {
+        TG.Engines.Measure.Distance.Within(that, 50, function (target) {
             if (target.title == 'Player') {
                 target.Combat.ReduceHP(1000, inTitle);
             }
@@ -171,7 +171,7 @@
         
         // Shoot every now and then.
         if (that.title !== 'Player' && Math.floor(Math.random() * 1000) < 15) {
-            TG.Engines.Game.AddObject(new TG.Objects.Projectile('Arrow', { x: _position.x, y: _position.y }, { horizontal: -1, vertical: 0 }, 1000, 1000, 50, that));
+            TG.Game.AddObject(new TG.Objects.Projectile('Arrow', { x: _position.x, y: _position.y }, { horizontal: -1, vertical: 0 }, 1000, 1000, 50, that));
         }
 
         return that;

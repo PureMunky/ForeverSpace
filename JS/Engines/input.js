@@ -32,7 +32,7 @@ TG.Engines.Input = (function (that) {
             if (keyboard && !keyboardEntry) {
                 event.preventDefault();
 
-				TG.Engines.Game.Player().setAI();
+				//TG.Engines.Game.Player().setAI();
 
 				pressed[event.keyCode] = true;
             }

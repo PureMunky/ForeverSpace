@@ -1,5 +1,6 @@
 ﻿'use strict';
 var TG = {};
+TG.Game = {};
 TG.Engines = {};
 TG.Content = {};
 TG.Objects = {};
@@ -34,6 +35,7 @@ TG.Objects.Render = {};
 
     // Engines
     scripts.push('JS/Engines/Core.js');
+    scripts.push('JS/Engines/Measure.js');
     scripts.push('JS/Engines/save.js');
     scripts.push('JS/Engines/input.js');
     scripts.push('JS/Engines/movement.js');
