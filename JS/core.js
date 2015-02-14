@@ -33,6 +33,7 @@ TG.Objects.Render = {};
     scripts.push('JS/Test/test.js');
 
     // Engines
+    scripts.push('JS/Engines/Core.js');
     scripts.push('JS/Engines/save.js');
     scripts.push('JS/Engines/input.js');
     scripts.push('JS/Engines/movement.js');
