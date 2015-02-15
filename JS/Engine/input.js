@@ -50,11 +50,13 @@
     });
   };
 
+  // Adds a new key to listen for presses on.
   that.AddKey = function (keyName, keyCode, DownAction, UpAction) {
     keys[keyCode] = keyboardButton(keyCode, DownAction, UpAction);
     keyArray.push(keyCode);
   };
 
+  // Evaluates the currently pressed keys and performs their actions.
   that.Tick = function () {
     var i = 0;
     for (i = 0; i < keyArray.length; i++) {
@@ -64,8 +66,10 @@
     }
   };
 
+  // Determines if keyboard entry is currently allowed.
   var keyboardEntry = false;
 
+  // Represents a key on the keyboard and it's actions.
   function keyboardButton(inKeyCode, inDownAction, inUpAction) {
     return {
       keyCode: inKeyCode,
@@ -79,12 +83,13 @@
     };
   }
 
+  // Not-Used/Working: display a login for the user.
   function LogIn(username, password) {
     hideLogin();
     keyboardEntry = false;
   }
 
-
+  // Evaluates gamepad update and performs their acions.
   function gamepadTick() {
     if (joystick) {
       var pad = navigator.getGamepads()[0];
@@ -121,6 +126,7 @@
     }
   }
 
+  // Polls for gamepad changes.
   function gamepadPoll() {
     if (window.requestAnimationFrame) {
       window.requestAnimationFrame(gamepadTick);
