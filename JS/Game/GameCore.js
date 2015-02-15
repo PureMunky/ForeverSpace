@@ -28,10 +28,12 @@ TG.Game.Core = (function (generate, render, vars) {
     return new TG.Objects.Render.Position(Math.floor(Math.random() * areaSize.width), Math.floor(Math.random() * areaSize.height));
   };
 
+  // Returns a random number between 0 and max.
   function _getRndNum(max) {
     return Math.floor(Math.random() * max);
   };
 
+  // Process a single tick of the game.
   function Tick(delta) {
     var i = 0;
 
@@ -96,6 +98,7 @@ TG.Game.Core = (function (generate, render, vars) {
     GenerateNewObjects();
   }
 
+  // Resets the game.
   function resetGame() {
     state.score = 0;
     state.lives = 3;
@@ -103,6 +106,7 @@ TG.Game.Core = (function (generate, render, vars) {
     PlayTitleScreen();
   }
 
+  // Resets the level.
   function resetLevel() {
     ForegroundObjects = [];
 
@@ -121,6 +125,7 @@ TG.Game.Core = (function (generate, render, vars) {
     running = true;
   }
 
+  // Creates new objects for the Tick.
   function GenerateNewObjects() {
     var areaSize = render.getPlayAreaSize();
 
@@ -170,6 +175,7 @@ TG.Game.Core = (function (generate, render, vars) {
     }
   }
 
+  // Display the title screen.
   function PlayTitleScreen() {
     running = false;
 
@@ -185,21 +191,20 @@ TG.Game.Core = (function (generate, render, vars) {
         );
   }
 
-
+  // Returns the player object.
   that.Player = function () {
     return GameObjects[0] || {};
   }
 
+  // Adds an object to GameObjects.
   that.AddObject = function (o) {
     GameObjects.push(o);
   }
 
+  // Layers of objects.
   var GameObjects = [];
   var BackgroundObjects = [];
   var ForegroundObjects = [];
-
-  
-  //resetGame();
 
   /*-- Register Keys --*/
   (function (i) {
