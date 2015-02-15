@@ -147,7 +147,9 @@
 
     // Draw the text outputs.
     for (i = 0; i < texts.length; i++) {
-      WriteOutput(texts[i].getText(), texts[i].position);
+      if (texts[i].getVisible()) {
+        WriteOutput(texts[i].getText(), texts[i].position);
+      }
     }
 
   };

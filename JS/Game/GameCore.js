@@ -13,14 +13,12 @@ TG.Game.Core = (function (generate, render, vars) {
       },
       ticks: 0,
       difficulty: 1,
-      projectiles: 0
     },
   chainDistanceInTicks = function () {
     return 40 / state.difficulty;
   },
   enemiesInChain = 10,
   difficultyTick = 5000,
-  totalProjectileCount = 2,
   running = 0;
 
   // Returns a random position.
@@ -82,11 +80,6 @@ TG.Game.Core = (function (generate, render, vars) {
               state.score += GameObjects[i].getScore();
             }
 
-            // if the object is a projectile then reduce the number of projectiles on the screen.
-            if (GameObjects[i] instanceof TG.Game.Objects.Projectile) {
-              state.projectiles--;
-            }
-
             // mark the id to be deleted
             deleteIds.push(i);
           }
@@ -104,7 +97,6 @@ TG.Game.Core = (function (generate, render, vars) {
   }
 
   function resetGame() {
-    console.log('reset');
     state.score = 0;
     state.lives = 3;
     GameObjects = [];
@@ -122,7 +114,6 @@ TG.Game.Core = (function (generate, render, vars) {
     };
     state.ticks = 0;
     state.difficulty = 4;
-    state.projectiles = 0;
 
     GameObjects = [];
 
@@ -241,9 +232,7 @@ TG.Game.Core = (function (generate, render, vars) {
 
     // Attack - Space
     i.AddKey('Attack', '32', function () {
-      if (running && state.projectiles <= totalProjectileCount) {
-        state.projectiles++;
-
+      if (running) {
         var pos = that.Player().getPosition();
 
         pos = new TG.Objects.Render.Position(pos.x, pos.y);
@@ -296,10 +285,10 @@ TG.Game.Core = (function (generate, render, vars) {
         new or.Layer(function () { return GameObjects || []; }, false),
         new or.Layer(function () { return ForegroundObjects || []; }, true)
     ], [
-        new or.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Render.Position(50, 30)),
-        new or.Text(function () { return 'Lives: ' + state.lives; }, new TG.Objects.Render.Position(50, 50)),
-        new or.Text(function () { return 'Health: ' + (that.Player().getState ? that.Player().getState().Combat.HP : 0) }, new TG.Objects.Render.Position(50, 70)),
-        new or.Text(function () { return 'Debug: ' + TG.Engine.Debug.debugString; }, new TG.Objects.Render.Position(50, 90)),
+        new or.Text(function () { return 'Score: ' + state.score; }, new TG.Objects.Render.Position(50, 30), function () { return running; }),
+        new or.Text(function () { return 'Lives: ' + state.lives; }, new TG.Objects.Render.Position(50, 50), function () { return running; }),
+        new or.Text(function () { return 'Health: ' + (that.Player().getState ? that.Player().getState().Combat.HP : 0) }, new TG.Objects.Render.Position(50, 70), function () { return running; }),
+        new or.Text(function () { return 'Debug: ' + TG.Engine.Debug.debugString; }, new TG.Objects.Render.Position(50, 90), function () { return running; }),
     ],
     that.Player);
   }(TG.Engine.Render, TG.Objects.Render));
