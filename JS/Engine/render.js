@@ -166,10 +166,10 @@ window.requestAnimationFrame = (function () {
       };
 })();
 
-$(function () {
+TG.Engine.Core.AddReady(function () {
   TG.Engine.Render.FillScreen();
   $(window).resize(function () {
-    TG.Engines.Render.FillScreen();
+    TG.Engine.Render.FillScreen();
   });
 
   if (document.getElementById('playArea')) {

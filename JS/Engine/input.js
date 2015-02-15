@@ -1,4 +1,4 @@
-﻿TG.Engine.Input = (function () {
+﻿TG.Engine.Input = (function (core) {
   'use strict';
 
   var that = {},
@@ -9,10 +9,45 @@
     keyboard = false,
     pressed = [];
 
+  // Initialize the input properties.
   that.Init = function (options) {
     keyboard = options.keyboard || false;
     mouse = options.mouse || false;
     joystick = options.joystick || false;
+
+    // Register key events when the engine is loaded.
+    core.AddReady(function () {
+      $(document).keydown(function (event) {
+        if (keyboard && !keyboardEntry) {
+          event.preventDefault();
+
+          //TG.Engines.Game.Player().setAI();
+
+          pressed[event.keyCode] = true;
+        }
+
+        TG.Engine.Debug.Log(event.keyCode);
+      });
+
+      $(document).keyup(function (event) {
+        if (keyboard && keys[event.keyCode] && keys[event.keyCode].upAction) {
+          delete pressed[event.keyCode];
+
+          keys[event.keyCode].upAction();
+        }
+      });
+    });
+
+    // Register mouse events when the engine is loaded. 
+    core.AddReady(function () {
+      if (mouse) {
+        //TODO: Set click event to be context sensitive (e.x. click on an enemy turns player hostile and attacks enemy).
+        document.getElementById('playArea').addEventListener('click', function (e) {
+          var clickPos = { x: e.offsetX, y: e.offsetY };
+          TG.Engines.Game.Player().setAI(TG.Game.AI.toward(clickPos));
+        }, false);
+      }
+    });
   };
 
   that.AddKey = function (keyName, keyCode, DownAction, UpAction) {
@@ -28,28 +63,6 @@
       }
     }
   };
-
-  $(function () {
-    $(document).keydown(function (event) {
-      if (keyboard && !keyboardEntry) {
-        event.preventDefault();
-
-        //TG.Engines.Game.Player().setAI();
-
-        pressed[event.keyCode] = true;
-      }
-
-      TG.Engine.Debug.Log(event.keyCode);
-    });
-
-    $(document).keyup(function (event) {
-      if (keyboard && keys[event.keyCode] && keys[event.keyCode].upAction) {
-        delete pressed[event.keyCode];
-
-        keys[event.keyCode].upAction();
-      }
-    });
-  });
 
   var keyboardEntry = false;
 
@@ -71,15 +84,6 @@
     keyboardEntry = false;
   }
 
-  $(function () {
-    if (mouse) {
-      //TODO: Set click event to be context sensitive (e.x. click on an enemy turns player hostile and attacks enemy).
-      document.getElementById('playArea').addEventListener('click', function (e) {
-        var clickPos = { x: e.offsetX, y: e.offsetY };
-        TG.Engines.Game.Player().setAI(TG.Game.AI.toward(clickPos));
-      }, false);
-    }
-  });
 
   function gamepadTick() {
     if (joystick) {
@@ -131,4 +135,4 @@
   gamepadTick();
 
   return that;
-})();
+})(TG.Engine.Core);

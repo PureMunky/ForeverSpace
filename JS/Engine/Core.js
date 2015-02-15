@@ -3,7 +3,8 @@
 
   var that = {},
     deltaStamp = new Date(),
-    ticks = [],
+    ticks = [], // Fires on envery tick of the game engine.
+    readys = [], // Fires after the entire application has loaded.
     timer;
 
   // Iterates through the ticks at the rate initiated.
@@ -32,6 +33,19 @@
     ticks.push(newTick);
   };
 
+  that.AddReady = function (newReady) {
+    readys.push(newReady);
+  }
+
+  that.Ready = function () {
+    var i = 0;
+
+    // Loop through ticks.
+    for (i = 0; i < ticks.length; i++) {
+      // Pass delta value to each tick.
+      readys[i]();
+    }
+  }
 
   return that;
 }());

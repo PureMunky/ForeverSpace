@@ -207,7 +207,8 @@ TG.Game.Core = (function (generate, render, vars) {
   var BackgroundObjects = [];
   var ForegroundObjects = [];
 
-  resetGame();
+  
+  //resetGame();
 
   /*-- Register Keys --*/
   (function (i) {
@@ -321,6 +322,9 @@ TG.Game.Core = (function (generate, render, vars) {
 
     // Add main game loop.
     core.AddTick(Tick);
+
+    // start the game.
+    core.AddReady(resetGame);
 
   }(TG.Engine.Core));
 
