@@ -33,10 +33,12 @@
     ticks.push(newTick);
   };
 
+  // Adds a function to be run when the engine is loaded.
   that.AddReady = function (newReady) {
     readys.push(newReady);
   }
 
+  // To be called at the end of page load.
   that.Ready = function () {
     var i = 0;
 

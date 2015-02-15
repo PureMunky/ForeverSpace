@@ -10,7 +10,7 @@ TG.Engine.GlobalVars = (function(that) {
     
     // demo images borrowed from http://www.famitsu.com/freegame/tool/chibi/index1.html
     // and other sites for amusement
-    that._PlayerImageDemo = 'images/player/demo_player.png';
+    that._PlayerImageDemo = 'images/player/player_ship.png';
     that._NPCMale = 'images/npc/male.png';
     that._NPCFemale = 'images/npc/female.png';
     that._NPCPony = 'images/npc/pony_princess.png';

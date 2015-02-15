@@ -19,7 +19,7 @@ TG.Game.Core = (function (generate, render, vars) {
   },
   enemiesInChain = 10,
   difficultyTick = 5000,
-  running = 0;
+  running = false;
 
   // Returns a random position.
   function _getRndPos() {
