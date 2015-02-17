@@ -184,7 +184,7 @@ TG.Game.Core = (function (generate, render, vars) {
     ForegroundObjects.push(
             new TG.Objects.Render.Actor(
                 'title',
-                new TG.Objects.Render.Position(render.getPlayAreaSize().width - 5, 200),
+                new TG.Objects.Render.Position(render.getPlayAreaSize().width - 5, (render.getPlayAreaSize().height / 2) - 111.5),
                 { horizontal: -100, vertical: 0 },
                 TG.Game.Animations.Generic(vars._TitleScreen, 598, 223, 0, 0)
             )
