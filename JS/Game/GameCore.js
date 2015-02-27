@@ -1,4 +1,4 @@
-TG.Game.Core = (function (generate, render, vars) {
+TG.Game.Core = (function (generate, render, vars, dice) {
   'use strict';
 
   var that = {},
@@ -26,11 +26,6 @@ TG.Game.Core = (function (generate, render, vars) {
     var areaSize = render.getPlayAreaSize();
 
     return new TG.Objects.Render.Position(Math.floor(Math.random() * areaSize.width), Math.floor(Math.random() * areaSize.height));
-  };
-
-  // Returns a random number between 0 and max.
-  function _getRndNum(max) {
-    return Math.floor(Math.random() * max);
   };
 
   // Process a single tick of the game.
@@ -130,8 +125,8 @@ TG.Game.Core = (function (generate, render, vars) {
     var areaSize = render.getPlayAreaSize();
 
     // Generate Background Objects
-    if (_getRndNum(1) == 0) {
-      var starSpeed = (_getRndNum(500) / 100) * -150;
+    if (dice.Roll('coin') == 'heads') {
+      var starSpeed = (dice.Roll(500) / 100) * -150;
       if (starSpeed < -1) {
         BackgroundObjects.push(
             new TG.Objects.Render.Actor(
@@ -147,7 +142,7 @@ TG.Game.Core = (function (generate, render, vars) {
     if (running) {
       // Generate Enemy Objects
       if (!state.chain.chaining) {
-        state.chain.chaining = (_getRndNum((500 / state.difficulty)) == 0);
+        state.chain.chaining = (dice.Roll((500 / state.difficulty)) == 0);
       } else {
         if (!state.chain.Pos.y) {
           state.chain.Pos.y = _getRndPos().y;
@@ -177,8 +172,6 @@ TG.Game.Core = (function (generate, render, vars) {
 
   // Display the title screen.
   function PlayTitleScreen() {
-    running = false;
-
     ForegroundObjects = [];
 
     ForegroundObjects.push(
@@ -323,4 +316,4 @@ TG.Game.Core = (function (generate, render, vars) {
   }(TG.Engine.Core));
 
   return that;
-})(TG.Game.Generate, TG.Engine.Render, TG.Engine.GlobalVars);
+})(TG.Game.Generate, TG.Engine.Render, TG.Engine.GlobalVars, TG.Engine.Dice);

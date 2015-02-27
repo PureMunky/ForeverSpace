@@ -33,6 +33,7 @@ TG.Objects.Render = {};
   // Engines
   scripts.push('JS/Engine/Core.js');
   scripts.push('JS/Engine/Measure.js');
+  scripts.push('JS/Engine/Dice.js');
   //scripts.push('JS/Engine/save.js');
   scripts.push('JS/Engine/input.js');
   //scripts.push('JS/Engine/movement.js');
